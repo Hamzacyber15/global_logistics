@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "957692951919",
+    "project_id": "globallogistics-94538",
+    "storage_bucket": "globallogistics-94538.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:957692951919:android:b4a12bb4d6571d9f34bc9a",
+        "android_client_info": {
+          "package_name": "com.mhslogistics.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXi9RNCj3T8srQlBBEUe-WIaX9r8t1cC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
