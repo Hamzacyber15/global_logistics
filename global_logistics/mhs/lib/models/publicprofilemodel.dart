@@ -26,7 +26,7 @@ class PublicProfileModel {
       data['lastName'] ?? "",
       data['profileUrl'] ?? "",
       data['gender'] ?? "",
-      data['role'] ?? "",
+      data['userRole'] ?? "",
       data['status'] ?? "",
     );
   }

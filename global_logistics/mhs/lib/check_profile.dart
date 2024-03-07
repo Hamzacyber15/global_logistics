@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/admin/admin_main_page.dart';
+import 'package:mhs/bottom_bar_screens.dart/home.dart';
 import 'package:mhs/loading_widget.dart';
 import 'package:mhs/models/publicprofilemodel.dart';
 
@@ -31,6 +32,8 @@ class _CheckProfileState extends State<CheckProfile> {
     if (profile != null) {
       if (profile.role == "admin") {
         navAdmin();
+      } else if (profile.role == "business") {
+        navHome();
       }
     }
   }
@@ -44,6 +47,18 @@ class _CheckProfileState extends State<CheckProfile> {
       ), (route) => false);
     }
   }
+
+  void navHome() {
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (_) {
+          return const Home();
+        },
+      ), (route) => false);
+    }
+  }
+
+  //
 
   @override
   Widget build(BuildContext context) {

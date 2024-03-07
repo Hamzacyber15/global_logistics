@@ -81,6 +81,12 @@ class _EquipmentMainScreensState extends State<EquipmentMainScreens> {
     getEquipment();
   }
 
+  // String timestampToString(Timestamp dt) {
+  //   DateTime t = dt.toDate();
+  //   var formatter = intl.DateFormat('hh.mm a, dd MMM, yy');
+  //   return formatter.format(t);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,7 +143,7 @@ class _EquipmentMainScreensState extends State<EquipmentMainScreens> {
           Text(em.equipmentType),
         ),
         DataCell(
-          Text(Constants.timestampToString(em.timestamp)),
+          Text(em.timestamp.toString()),
         ),
       ],
     );

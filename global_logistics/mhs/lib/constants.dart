@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/models/attachment_model.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
-import 'package:intl/intl.dart' as intl;
 
 class Constants {
   static bool bigScreen = false;
@@ -85,9 +84,9 @@ class Constants {
     return '${text[0].toUpperCase()}${text.substring(1)}';
   }
 
-  static String timestampToString(Timestamp dt) {
-    DateTime t = dt.toDate();
-    var formatter = intl.DateFormat('hh.mm a, dd MMM, yy');
-    return formatter.format(t);
-  }
+  // static String timestampToString(Timestamp dt) {
+  //   DateTime t = dt.toDate();
+  //   var formatter = intl.DateFormat('hh.mm a, dd MMM, yy');
+  //   return formatter.format(t);
+  // }
 }

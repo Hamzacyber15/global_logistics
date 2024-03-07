@@ -11,6 +11,7 @@ class AppTheme {
   static Color lightGreen = const Color(0xFFF7FFF2);
   static Color greyishBlue = const Color(0xFF84B2B0);
   static Color primaryColor = const Color(0xFF1C3947);
+  static Color orangeColor = const Color.fromARGB(255, 205, 59, 33);
   static Color grey = const Color(0xAAAAAAAA);
   static Color redColor = const Color(0xFFA00000);
   static Color transparentColor = const Color(0x00FFFFFF);

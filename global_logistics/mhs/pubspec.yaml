@@ -42,7 +42,6 @@ dependencies:
   image_picker: ^1.0.7
   cached_network_image: ^3.3.1
   url_launcher: ^6.2.4
-  syncfusion_flutter_pdfviewer: ^24.2.4
   country_code_picker: ^3.0.0
   firebase_storage: ^11.6.5
   camera: ^0.10.5+9
