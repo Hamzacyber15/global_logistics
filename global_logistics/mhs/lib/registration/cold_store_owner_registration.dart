@@ -602,7 +602,7 @@ class _ColdStoreOwnerRegistrationState
                               child: Column(
                                 children: [
                                   for (int i = 0; i < businessList.length; i++)
-                                    CheckBoxContainer(
+                                    CheckBoxListTileContainer(
                                       cm: businessList[i],
                                       parseData: getCheckBoxData,
                                       index: i,

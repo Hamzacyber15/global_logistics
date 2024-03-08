@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/order/place_an_order.dart';
 import 'package:mhs/registration/sign_in.dart';
 
 class Home extends StatefulWidget {
@@ -30,6 +31,16 @@ class _HomeState extends State<Home> {
     );
   }
 
+  void navOrder() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) {
+          return const PlaceAnOrder();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +57,7 @@ class _HomeState extends State<Home> {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: navOrder,
         label: const Text("Place Order"),
         tooltip: 'Place Order',
         elevation: 12,

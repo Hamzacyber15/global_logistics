@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/admin/admin_main_page.dart';
+import 'package:mhs/bottom_bar_screens.dart/bottom_nav_bar.dart';
 import 'package:mhs/bottom_bar_screens.dart/home.dart';
 import 'package:mhs/loading_widget.dart';
 import 'package:mhs/models/publicprofilemodel.dart';
@@ -52,7 +53,7 @@ class _CheckProfileState extends State<CheckProfile> {
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
         builder: (_) {
-          return const Home();
+          return BottomNavBar();
         },
       ), (route) => false);
     }

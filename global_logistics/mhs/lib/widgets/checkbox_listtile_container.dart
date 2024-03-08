@@ -2,21 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/models/check_box_model.dart';
 
-class CheckBoxContainer extends StatefulWidget {
+class CheckBoxListTileContainer extends StatefulWidget {
   final CheckBoxModel cm;
   final Function parseData;
   final int index;
-  const CheckBoxContainer(
+  const CheckBoxListTileContainer(
       {required this.cm,
       required this.parseData,
       required this.index,
       super.key});
 
   @override
-  State<CheckBoxContainer> createState() => _CheckBoxContainerState();
+  State<CheckBoxListTileContainer> createState() =>
+      _CheckBoxListTileContainerState();
 }
 
-class _CheckBoxContainerState extends State<CheckBoxContainer> {
+class _CheckBoxListTileContainerState extends State<CheckBoxListTileContainer> {
   FocusNode focusNode = FocusNode();
   TextEditingController titleController = TextEditingController();
   ValueNotifier<bool> check = ValueNotifier<bool>(false);

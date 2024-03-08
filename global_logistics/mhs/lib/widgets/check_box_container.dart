@@ -17,40 +17,37 @@ class CheckBoxContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: AppTheme.primaryColor.withOpacity(0.1),
-        border: !showBorder!
-            ? Border.all(width: 1, color: AppTheme.blackColor.withOpacity(0.2))
-            : null,
-      ),
-      child: CheckboxListTile(
-        secondary: Icon(
-          Icons.check_box,
-          color: AppTheme.primaryColor,
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
         ),
-        contentPadding:
-            EdgeInsets.symmetric(horizontal: 10, vertical: verticalPadding!),
-        visualDensity: VisualDensity.compact,
-        dense: true,
-        checkboxShape: RoundedRectangleBorder(
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-            side: BorderSide(color: AppTheme.primaryColor)),
-        value: check,
-        onChanged: ((bool? value) {
-          tapped();
-          // setState(() {
-          //   isFree = !isFree;
-          // });
-        }),
-        title: Text(
-          title,
-          maxLines: 2,
-          style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
-              color: AppTheme.blackColor),
+        child: CheckboxListTile(
+          secondary: Icon(
+            Icons.check_box,
+            color: AppTheme.primaryColor,
+          ),
+          checkColor: AppTheme.greenColor,
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: 6, vertical: verticalPadding!),
+          visualDensity: VisualDensity.compact,
+          dense: true,
+          checkboxShape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              side: BorderSide(color: AppTheme.primaryColor)),
+          value: check,
+          onChanged: ((bool? value) {
+            tapped();
+          }),
+          title: Text(
+            title,
+            maxLines: 2,
+            style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+                color: AppTheme.blackColor),
+          ),
         ),
       ),
     );
