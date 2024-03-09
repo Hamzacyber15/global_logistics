@@ -26,6 +26,12 @@ class Constants {
     DropDownMenuDataModel("", "Labour", "labour"),
   ];
 
+  static List<DropDownMenuDataModel> coldStorageBlock = [
+    DropDownMenuDataModel("", "D", "d"),
+    DropDownMenuDataModel("", "E", "e"),
+    DropDownMenuDataModel("", "F", "f"),
+  ];
+
   static List<DropDownMenuDataModel> equipmentType = [
     DropDownMenuDataModel("", "Electric TukTuk", "electric tuk tuk"),
     DropDownMenuDataModel(

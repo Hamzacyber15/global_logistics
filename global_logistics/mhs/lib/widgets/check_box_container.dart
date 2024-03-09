@@ -25,10 +25,11 @@ class CheckBoxContainer extends StatelessWidget {
         ),
         child: CheckboxListTile(
           secondary: Icon(
-            Icons.check_box,
+            Icons.info,
             color: AppTheme.primaryColor,
           ),
-          checkColor: AppTheme.greenColor,
+          activeColor: AppTheme.greenColor,
+          checkColor: AppTheme.whiteColor,
           contentPadding:
               EdgeInsets.symmetric(horizontal: 6, vertical: verticalPadding!),
           visualDensity: VisualDensity.compact,
