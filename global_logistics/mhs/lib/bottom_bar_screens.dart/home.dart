@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/constants.dart';
+import 'package:mhs/models/business_profile_model_profile.dart';
+import 'package:mhs/models/publicprofilemodel.dart';
 import 'package:mhs/order/place_an_order.dart';
 import 'package:mhs/registration/sign_in.dart';
 
@@ -12,6 +16,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    //getData();
+  }
+
+  void getData() async {
+    await Hive.openBox("localMemory");
+    final myBox = Hive.box("localMemory");
+    User? user = FirebaseAuth.instance.currentUser;
+    PublicProfileModel? profile =
+        await PublicProfileModel.getPublicProfile(user!.uid);
+    if (profile != null) {
+      BusinessProfileModelProfile? businessProfile =
+          await BusinessProfileModelProfile.getPublicProfile(
+              profile.businessId!);
+      businessProfile = Constants.businessProfile;
+      profile = Constants.profile;
+      myBox.put('profile', profile);
+      myBox.put("businessProfile", businessProfile);
+    }
+  }
+
   void logout() async {
     FirebaseAuth.instance.signOut().then((value) async {
       // ignore: await_only_futures

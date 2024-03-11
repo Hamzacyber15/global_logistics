@@ -4,9 +4,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/models/attachment_model.dart';
+import 'package:mhs/models/business/business_profile.dart';
+import 'package:mhs/models/business_profile_model_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/publicprofilemodel.dart';
 
 class Constants {
+  static String businessId = "";
+  static String profileId = "";
   static bool bigScreen = false;
   static List<DropDownMenuDataModel> countries = [
     DropDownMenuDataModel("", "Oman", "country"),
@@ -49,6 +54,27 @@ class Constants {
     DropDownMenuDataModel("", "Bangali", "bangali"),
     DropDownMenuDataModel("", "Urdu", "urdu"),
   ];
+
+  static BusinessProfileModelProfile businessProfile =
+      BusinessProfileModelProfile(
+          id: "",
+          businessAddress: "",
+          businessAreas: [],
+          certificate: [],
+          nameArabic: "",
+          nameEnglish: "",
+          phoneNumber: "",
+          registrationNum: "",
+          status: "",
+          userCountry: "",
+          userEmail: "",
+          userId: "",
+          userLanguage: "",
+          userMobile: "",
+          userName: "",
+          userAttachment: []);
+  static PublicProfileModel profile =
+      PublicProfileModel("", "", Timestamp.now(), "", "", "");
 
   static Future<String> uploadAttachment(AttachmentModel attachment) async {
     String url = '';

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mhs/models/business/business_area_model.dart';
 
-class BusinessProfileModel {
+class BusinessProfileModelProfile {
   String id;
   String businessAddress;
   List<BusinessAreaModel> businessAreas;
@@ -18,7 +18,7 @@ class BusinessProfileModel {
   String userMobile;
   String userName;
   List<String> userAttachment;
-  BusinessProfileModel({
+  BusinessProfileModelProfile({
     required this.id,
     required this.businessAddress,
     required this.businessAreas,
@@ -37,26 +37,9 @@ class BusinessProfileModel {
     required this.userAttachment,
   });
 
-  factory BusinessProfileModel.fromMap(
+  factory BusinessProfileModelProfile.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data();
-    BusinessProfileModel bp = BusinessProfileModel(
-        id: "",
-        businessAddress: "",
-        businessAreas: [],
-        certificate: [],
-        nameArabic: "",
-        nameEnglish: "",
-        phoneNumber: "",
-        registrationNum: "",
-        status: "",
-        userCountry: "",
-        userEmail: "",
-        userId: "",
-        userLanguage: "",
-        userMobile: "",
-        userName: "",
-        userAttachment: []);
     List<dynamic> bArea = data!['businessAreas'] ?? [];
     List<BusinessAreaModel> bm = [];
     for (var element in bArea) {
@@ -73,7 +56,7 @@ class BusinessProfileModel {
     for (var element in attachment) {
       a.add(element);
     }
-    bp = BusinessProfileModel(
+    return BusinessProfileModelProfile(
         id: doc.id,
         businessAddress: data['businessAddress'] ?? "",
         businessAreas: bm,
@@ -90,12 +73,22 @@ class BusinessProfileModel {
         userMobile: data['userMobile'] ?? "",
         userName: data['userName'] ?? "",
         userAttachment: a);
-    return bp;
   }
-  static BusinessProfileModel? getBusinessList(
-      DocumentSnapshot<Map<String, dynamic>> d) {
+
+  static Future<BusinessProfileModelProfile?> getPublicProfile(
+      String id) async {
     try {
-      return BusinessProfileModel.fromMap(d);
+      return FirebaseFirestore.instance
+          .collection('business')
+          .doc(id)
+          .get()
+          .then((value) {
+        if (value.exists) {
+          return BusinessProfileModelProfile.fromFirestore(value);
+        } else {
+          return null;
+        }
+      });
     } catch (e) {
       return null;
     }

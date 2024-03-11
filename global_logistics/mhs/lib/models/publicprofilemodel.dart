@@ -2,32 +2,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PublicProfileModel {
   String id;
-  String firstName;
-  String lastName;
-  String url;
-  String gender;
+  String businessEmail;
+  String? businessId;
+  Timestamp timestamp;
+  String userEmail;
   String role;
   String status;
+
   PublicProfileModel(
     this.id,
-    this.firstName,
-    this.lastName,
-    this.url,
-    this.gender,
+    this.businessEmail,
+    this.timestamp,
+    this.userEmail,
     this.role,
-    this.status,
-  );
+    this.status, {
+    this.businessId,
+  });
   factory PublicProfileModel.fromFirestore(
       DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
     return PublicProfileModel(
       doc.id,
-      data['firstName'] ?? "",
-      data['lastName'] ?? "",
-      data['profileUrl'] ?? "",
-      data['gender'] ?? "",
+      data['businessEmail'] ?? "",
+      data['timestamp'] ?? Timestamp.now(),
+      data['userEmail'] ?? "",
       data['userRole'] ?? "",
       data['status'] ?? "",
+      businessId: data['businessId'] ?? "",
     );
   }
 

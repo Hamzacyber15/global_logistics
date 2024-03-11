@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:mhs/admin/admin_main_page.dart';
 import 'package:mhs/bottom_bar_screens.dart/bottom_nav_bar.dart';
-import 'package:mhs/bottom_bar_screens.dart/home.dart';
+import 'package:mhs/constants.dart';
 import 'package:mhs/loading_widget.dart';
+import 'package:mhs/models/business_profile_model_profile.dart';
 import 'package:mhs/models/publicprofilemodel.dart';
 
 class CheckProfile extends StatefulWidget {
@@ -28,12 +30,22 @@ class _CheckProfileState extends State<CheckProfile> {
     if (user == null) {
       return;
     }
+    // await Hive.openBox("localMemory");
+    // final myBox = Hive.box("localMemory");
     PublicProfileModel? profile =
         await PublicProfileModel.getPublicProfile(user.uid);
+
     if (profile != null) {
       if (profile.role == "admin") {
         navAdmin();
       } else if (profile.role == "business") {
+        profile.businessId = Constants.businessId;
+        profile.id = Constants.profileId;
+        // BusinessProfileModelProfile? businessProfile =
+        //     await BusinessProfileModelProfile.getPublicProfile(
+        //         profile.businessId!);
+        // myBox.put('profile', profile);
+        // myBox.put("businessProfile", businessProfile);
         navHome();
       }
     }
@@ -53,7 +65,7 @@ class _CheckProfileState extends State<CheckProfile> {
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
         builder: (_) {
-          return BottomNavBar();
+          return const BottomNavBar();
         },
       ), (route) => false);
     }
