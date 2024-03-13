@@ -10,9 +10,10 @@ class DropDownMenu extends StatefulWidget {
   final DropDownMenuDataModel initialValue;
   final String type;
   final bool? showBorder;
+  final int? index;
   const DropDownMenu(
       this.getValues, this.title, this.list, this.initialValue, this.type,
-      {this.icon, this.showBorder = false, super.key});
+      {this.icon, this.showBorder = false, this.index, super.key});
 
   @override
   State<DropDownMenu> createState() => _DropDownMenuState();
@@ -35,11 +36,12 @@ class _DropDownMenuState extends State<DropDownMenu> {
         value: e,
         child: Row(
           children: [
-            Image.asset(
-              widget.icon!,
-              height: 20,
-              width: 20,
-            ),
+            if (widget.icon != null)
+              Image.asset(
+                widget.icon!,
+                height: 20,
+                width: 20,
+              ),
             const SizedBox(
               width: 10,
             ),
@@ -58,7 +60,11 @@ class _DropDownMenuState extends State<DropDownMenu> {
       selected = s;
       isSelected = true;
     });
-    widget.getValues(widget.type, selected.title, selected.id);
+    if (widget.index != null) {
+      widget.getValues(widget.type, selected.title, selected.id, widget.index);
+    } else {
+      widget.getValues(widget.type, selected.title, selected.id);
+    }
   }
 
   @override
@@ -67,7 +73,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
       height: 50,
       decoration: BoxDecoration(
           border: widget.showBorder!
-              ? Border.all(color: AppTheme.blackColor.withOpacity(0.05))
+              ? Border.all(color: AppTheme.blackColor.withOpacity(0.2))
               : null,
           color: AppTheme.whiteColor,
           borderRadius: BorderRadius.circular(8)),

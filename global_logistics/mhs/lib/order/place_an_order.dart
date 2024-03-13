@@ -21,7 +21,16 @@ class PlaceAnOrder extends StatefulWidget {
 
 class _PlaceAnOrderState extends State<PlaceAnOrder> {
   bool loading = false;
+  List<bool> orderCategoryBool = [false, false];
+  List<String> orderCategory = ["Indoor Handling", "OutDoor"];
   List<String> equipmentType = ["Tuk Tuk", "Fork Lift"];
+  List<String> indoorEquipmentType = ["Electric ForkLift", "Ride On ForkLift"];
+  List<String> outDoorEquipmentType = [
+    '4 Wheel Diesel Forklift',
+    "Tuk Tuk Electric",
+    "Tractor",
+    "10-Ton Reefer Truck"
+  ];
   String selectedBlock = "";
   List<StorageAreaModel> areaList = [];
   List<StorageAreaModel> dryStoreList = [];
@@ -36,6 +45,21 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   DropDownMenuDataModel o = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel p = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel storage = Constants.coldStorageBlock[0];
+  List<String> orderCategoryImage = [
+    'assets/images/indoor.png',
+    'assets/images/outdoor.png'
+  ];
+  List<String> indoorEquipmentIcons = [
+    "assets/images/electric_forklift.png",
+    "assets/images/rideon_forklift.png",
+  ];
+  List<String> outdoorEquipmentIcons = [
+    "assets/images/4wheel_diesel_forklift.png",
+    "assets/images/electric_tuk-tuk.png",
+    "assets/images/tractor.png",
+    "assets/images/reefer_truck.png"
+  ];
+
   List<String> dropLocation = [
     "Cold Storage",
     "Dry Store",
@@ -56,10 +80,15 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
     super.initState();
   }
 
-  void changeStatus(int i) {
-    setState(() {
+  void changeStatus(String type, int i) {
+    if (type == "equipment") {
+      //setState(() {
       equipmentTypeBool[i] = !equipmentTypeBool[i];
-    });
+      //});
+    } else {
+      orderCategoryBool[i] = !orderCategoryBool[i];
+    }
+    setState(() {});
   }
 
   void changeLocationStatus(int selectedIndex) {
@@ -262,6 +291,20 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              children: [
+                for (int i = 0; i < equipmentType.length; i++)
+                  Expanded(
+                    child: Card(
+                      child: CheckBoxContainer(
+                          iconImage: orderCategoryImage[i],
+                          check: orderCategoryBool[i],
+                          tapped: () => changeStatus("type", i),
+                          title: orderCategory[i]),
+                    ),
+                  ),
+              ],
+            ),
             for (int i = 0; i < equipmentType.length; i++)
               Card(
                 child: SizedBox(
@@ -269,7 +312,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                   child: CheckBoxContainer(
                       verticalPadding: 4,
                       check: equipmentTypeBool[i],
-                      tapped: () => changeStatus(i),
+                      tapped: () => changeStatus("equipment", i),
                       showBorder: true,
                       title: equipmentType[i]),
                 ),

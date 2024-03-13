@@ -8,14 +8,14 @@ import 'package:mhs/models/publicprofilemodel.dart';
 import 'package:mhs/order/place_an_order.dart';
 import 'package:mhs/registration/sign_in.dart';
 
-class Home extends StatefulWidget {
-  const Home({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _HomeState extends State<Home> {
+class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
@@ -72,31 +72,16 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const Column(
+      body: Column(
         children: [
-          // const Text("My Home Page"),
-          // ElevatedButton(
-          //   onPressed: logout,
-          //   child: const Text(
-          //     'Sign Out',
-          //   ),
-          // ),
+          const Text("My Home Page"),
+          ElevatedButton(
+            onPressed: logout,
+            child: const Text(
+              'Sign Out',
+            ),
+          ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: navOrder,
-        label: const Text("Place Order"),
-        tooltip: 'Place Order',
-        elevation: 12,
-        focusElevation: 5,
-        splashColor: AppTheme.greenColor,
-        backgroundColor: AppTheme.primaryColor,
-        hoverColor: AppTheme.orangeColor,
-        hoverElevation: 50,
-        icon: Icon(
-          Icons.add,
-          color: AppTheme.whiteColor,
-        ),
       ),
     );
   }

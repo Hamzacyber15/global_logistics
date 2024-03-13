@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/bottom_bar_screens.dart/home.dart';
+import 'package:mhs/bottom_bar_screens.dart/profile.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -17,7 +18,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       return const Home();
     } else if (index == 1) {
       return const //PlannedAdventure();
-          Home();
+          Profile();
     } else {
       return const Center(
         child: Text('Body'),

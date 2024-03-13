@@ -2,14 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/bottom_bar_screens.dart/bottom_nav_bar.dart';
 import 'package:mhs/bottom_bar_screens.dart/home.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/loading_widget.dart';
 import 'package:mhs/models/attachment_model.dart';
 import 'package:mhs/models/check_box_model.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/storage_area_model.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/registration/cold_store_user_registration.dart';
+import 'package:mhs/registration/registration_fields.dart';
 import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/document_viewer.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
@@ -36,11 +39,19 @@ class _ColdStoreOwnerRegistrationState
   String businessEmail = "";
   String password = "";
   String confirmPassword = "";
-  List<String> selectedBlock = [""];
-  String selectedColdStorage = "";
+  List<String> selectedBlock = [];
   List<String> selectedWholeSaleArea = [""];
+  List<String> selectedWholeSaleAreaId = [""];
+  List<StorageAreaModel> selectedWholeSaleAreaIdt = [];
   List<String> selectedOnionArea = [""];
+  List<String> selectedOnionAreaId = [];
+  List<StorageAreaModel> selectedOnionAreaIdt = [];
   List<String> selectedColdStorageArea = [""];
+  List<String> selectedColdStorageAreaId = [];
+  List<StorageAreaModel> selectedColdAreaIdt = [];
+  List<String> selectedPotatoArea = [""];
+  List<String> selectedPotatoAreaId = [];
+  List<StorageAreaModel> selectedPotatoAreaIdt = [];
   TextEditingController businessNameController = TextEditingController();
   TextEditingController businessNameArabicController = TextEditingController();
   TextEditingController businessRegistrationController =
@@ -74,29 +85,54 @@ class _ColdStoreOwnerRegistrationState
     false,
   ];
 
+  @override
+  void initState() {
+    super.initState();
+    getDataStorage();
+  }
+
   void onFilesPicked(List<AttachmentModel> files) async {
     setState(() {
       attachments = files;
     });
   }
 
-  void getValues(String type, String value, String id) {
+  void getValues(String type, String value, String id, int i) {
     if (type == "block") {
-      selectedColdStorage = "";
-      selectedBlock[0] = value;
+      //selectedBlock[i] = value;
+      // selectedBlock[i] = value;
       Provider.of<StorageProvider>(context, listen: false)
-          .getColdStorageBlock(selectedBlock[0]);
+          .getColdStorageBlock(value);
     } else if (type == "coldStorage") {
-      selectedColdStorage = value;
-    } else if (type == "onionShade") {}
+      // selectedColdStorageArea[i] = value;
+      // selectedColdStorageAreaId[i] = id;
+      selectedColdAreaIdt.insert(
+          i, StorageAreaModel(id: id, storage: value, status: ""));
+    } else if (type == "onionShade") {
+      // selectedOnionArea[i] = value;
+      // selectedOnionAreaId[i] = id;
+      selectedOnionAreaIdt.insert(
+          i, StorageAreaModel(id: id, storage: value, status: ""));
+    } else if (type == "potatoShade") {
+      // selectedPotatoArea[i] = value;
+      // selectedPotatoAreaId[i] = id;
+      selectedPotatoAreaIdt.insert(
+          i, StorageAreaModel(id: id, storage: value, status: ""));
+    } else if (type == "wholeSale") {
+      //   selectedColdStorageArea[i] = value;
+      selectedWholeSaleAreaIdt.insert(
+          i, StorageAreaModel(id: id, storage: value, status: ""));
+      // selectedColdStorageAreaId.insert(
+      //   i,
+      //   id,
+      // );
+      // selectedWholeSaleArea.insert(i, value);
+    }
   }
+
+  void getData(int i, Function f) {}
 
   void getColdStorage() {}
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
@@ -183,23 +219,23 @@ class _ColdStoreOwnerRegistrationState
   }
 
   bool checkBusinessList() {
-    bool result = false;
-    bool hasTrueStatus = businessList.any((element) => element.status);
-    if (!hasTrueStatus) {
-      Constants.showMessage(
-          context, "Please Select At least One Business Area");
-    } else {
-      for (var element in businessList) {
-        if (element.status) {
-          if (element.value.isEmpty) {
-            Constants.showMessage(
-                context, "${"Please Mention"} ${element.title}");
-          } else {
-            result = true;
-          }
-        }
-      }
-    }
+    bool result = true;
+    // bool hasTrueStatus = businessList.any((element) => element.status);
+    // if (!hasTrueStatus) {
+    //   Constants.showMessage(
+    //       context, "Please Select At least One Business Area");
+    // } else {
+    //   for (var element in businessList) {
+    //     if (element.status) {
+    //       if (element.value.isEmpty) {
+    //         Constants.showMessage(
+    //             context, "${"Please Mention"} ${element.title}");
+    //       } else {
+    //         result = true;
+    //       }
+    //     }
+    //   }
+    // }
 
     return result;
   }
@@ -228,12 +264,6 @@ class _ColdStoreOwnerRegistrationState
     Constants.showMessage(context, title);
   }
 
-  void navHome() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return const Home();
-    }));
-  }
-
   void registerBusiness() async {
     if (loading) {
       return;
@@ -258,13 +288,33 @@ class _ColdStoreOwnerRegistrationState
       urls.add(url);
     }
     List<dynamic> selectedBusinessList = [];
-    for (var element in businessList) {
-      if (element.status) {
-        selectedBusinessList.add({
-          "title": element.title,
-          'value': element.value,
-        });
-      }
+    for (var element in selectedColdAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Cold Storage",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedOnionAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Onion Shade",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedPotatoAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Potato Shade",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedWholeSaleAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Whole Sale",
+        "storage": element.storage,
+        'id': element.id,
+      });
     }
 
     setState(() {
@@ -301,12 +351,18 @@ class _ColdStoreOwnerRegistrationState
           "timestamp": Timestamp.now(),
           'businessId': businessId,
           'businessEmail': businessEmail,
-          'userEmail': userEmail
+          'userEmail': userEmail,
+          'userName': userName,
+          'userMobile': userMobile,
+          'userCountry': userSelectedCountry,
+          'userLanguage': userPreferredLanguage,
+          'userAttachment': userUrls,
         },
         SetOptions(merge: true),
       );
       await batch.commit().then((value) {
-        Navigator.of(context).pop();
+        // Navigator.of(context).pop();
+        navHome();
         Constants.showMessage(context, "Request Sent");
       }).catchError((onError) {
         Constants.showMessage(context, onError.toString());
@@ -337,6 +393,49 @@ class _ColdStoreOwnerRegistrationState
       setState(() {
         loading = false;
       });
+    }
+  }
+
+  void test() {
+    List<dynamic> selectedBusinessList = [];
+    for (var element in selectedColdAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Cold Storage",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedOnionAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Onion Shade",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedPotatoAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Potato Shade",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    for (var element in selectedWholeSaleAreaIdt) {
+      selectedBusinessList.add({
+        'title': "Whole Sale",
+        "storage": element.storage,
+        'id': element.id,
+      });
+    }
+    debugPrint(selectedBusinessList.toString());
+  }
+
+  void navHome() {
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (_) {
+          return const BottomNavBar();
+        },
+      ), (route) => false);
     }
   }
 
@@ -413,6 +512,17 @@ class _ColdStoreOwnerRegistrationState
     setState(() {});
   }
 
+  void getDataStorage() {
+    Provider.of<StorageProvider>(context, listen: false)
+        .getWholeSaleArea("wholeSale");
+
+    Provider.of<StorageProvider>(context, listen: false)
+        .getWholeSaleArea("onionShade");
+
+    Provider.of<StorageProvider>(context, listen: false)
+        .getWholeSaleArea("potatoShade");
+  }
+
   void addRow(int i) {
     if (i == 2) {
       selectedOnionArea.add("");
@@ -420,6 +530,8 @@ class _ColdStoreOwnerRegistrationState
       selectedWholeSaleArea.add("");
     } else if (i == 1) {
       selectedColdStorageArea.add("");
+    } else if (i == 3) {
+      selectedPotatoArea.add("");
     }
     setState(() {});
   }
@@ -428,10 +540,22 @@ class _ColdStoreOwnerRegistrationState
     if (businessInt == 2) {
       if (selectedOnionArea.length != 1) {
         selectedOnionArea.removeAt(rowInt);
+        // selectedOnionAreaIdt.removeAt(rowInt);
       }
     } else if (businessInt == 0) {
       if (selectedWholeSaleArea.length != 1) {
         selectedWholeSaleArea.removeAt(rowInt);
+        //selectedWholeSaleAreaIdt.removeAt(rowInt);
+      }
+    } else if (businessInt == 1) {
+      if (selectedColdStorageArea.length != 1) {
+        selectedColdStorageArea.removeAt(rowInt);
+        //selectedColdAreaIdt.removeAt(rowInt);
+      }
+    } else if (businessInt == 3) {
+      if (selectedPotatoArea.length != 1) {
+        selectedPotatoArea.removeAt(rowInt);
+        //selectedPotatoAreaIdt.removeAt(rowInt);
       }
     }
     setState(() {});
@@ -523,9 +647,9 @@ class _ColdStoreOwnerRegistrationState
                     IndexedStack(
                       index: count,
                       children: [
-                        // RegistrationFields(
-                        //   getData: parseData,
-                        // ),
+                        RegistrationFields(
+                          getData: parseData,
+                        ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -722,6 +846,7 @@ class _ColdStoreOwnerRegistrationState
                                                             Constants.a,
                                                             "wholeSale",
                                                             showBorder: true,
+                                                            index: a,
                                                           ),
                                                         ),
                                                       ),
@@ -741,46 +866,10 @@ class _ColdStoreOwnerRegistrationState
                                                         selectedColdStorageArea
                                                             .length;
                                                     b++)
-                                                  Row(
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
                                                     children: [
-                                                      Expanded(
-                                                        child: Card(
-                                                          color: AppTheme
-                                                              .primaryColor
-                                                              .withOpacity(0.1),
-                                                          child: DropDownMenu(
-                                                            getValues,
-                                                            "Block",
-                                                            icon:
-                                                                'assets/images/warehouse.png',
-                                                            Constants
-                                                                .coldStorageBlock,
-                                                            storage,
-                                                            "block",
-                                                            showBorder: true,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      if (selectedBlock
-                                                          .isNotEmpty)
-                                                        Expanded(
-                                                          child: Card(
-                                                            color: AppTheme
-                                                                .primaryColor
-                                                                .withOpacity(
-                                                                    0.1),
-                                                            child: DropDownMenu(
-                                                              getValues,
-                                                              "Cold Storage",
-                                                              icon:
-                                                                  'assets/images/warehouse.png',
-                                                              coldStorage,
-                                                              Constants.a,
-                                                              "coldStorage",
-                                                              showBorder: true,
-                                                            ),
-                                                          ),
-                                                        ),
                                                       IconButton(
                                                         onPressed: () =>
                                                             deleteRow(i, b),
@@ -788,6 +877,41 @@ class _ColdStoreOwnerRegistrationState
                                                             Icons.delete),
                                                         color:
                                                             AppTheme.redColor,
+                                                      ),
+                                                      Card(
+                                                        color: AppTheme
+                                                            .primaryColor
+                                                            .withOpacity(0.1),
+                                                        child: DropDownMenu(
+                                                          getValues,
+                                                          "Block",
+                                                          icon:
+                                                              'assets/images/warehouse.png',
+                                                          Constants
+                                                              .coldStorageBlock,
+                                                          storage,
+                                                          "block",
+                                                          showBorder: true,
+                                                          index: b,
+                                                        ),
+                                                      ),
+                                                      // if (selectedBlock
+                                                      //     .isNotEmpty)
+                                                      Card(
+                                                        color: AppTheme
+                                                            .primaryColor
+                                                            .withOpacity(0.1),
+                                                        child: DropDownMenu(
+                                                          getValues,
+                                                          "Cold Storage",
+                                                          icon:
+                                                              'assets/images/warehouse.png',
+                                                          coldStorage,
+                                                          Constants.a,
+                                                          "coldStorage",
+                                                          showBorder: true,
+                                                          index: b,
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -813,6 +937,7 @@ class _ColdStoreOwnerRegistrationState
                                                             Constants.a,
                                                             "onionShade",
                                                             showBorder: true,
+                                                            index: j,
                                                           ),
                                                         ),
                                                       ),
@@ -835,20 +960,26 @@ class _ColdStoreOwnerRegistrationState
                                                     ],
                                                   ),
                                               if (businessListBool[3] && i == 3)
-                                                Card(
-                                                  color: AppTheme.primaryColor
-                                                      .withOpacity(0.1),
-                                                  child: DropDownMenu(
-                                                    getValues,
-                                                    "Potato Shade",
-                                                    icon:
-                                                        'assets/images/warehouse.png',
-                                                    potatoStorage,
-                                                    Constants.a,
-                                                    "potatoShade",
-                                                    showBorder: true,
+                                                for (int z = 0;
+                                                    z <
+                                                        selectedPotatoArea
+                                                            .length;
+                                                    z++)
+                                                  Card(
+                                                    color: AppTheme.primaryColor
+                                                        .withOpacity(0.1),
+                                                    child: DropDownMenu(
+                                                      getValues,
+                                                      "Potato Shade",
+                                                      icon:
+                                                          'assets/images/warehouse.png',
+                                                      potatoStorage,
+                                                      Constants.a,
+                                                      "potatoShade",
+                                                      showBorder: true,
+                                                      index: z,
+                                                    ),
                                                   ),
-                                                ),
                                               if (businessListBool[i])
                                                 const SizedBox(
                                                   height: 10,
