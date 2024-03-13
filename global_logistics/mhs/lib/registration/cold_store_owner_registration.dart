@@ -7,11 +7,16 @@ import 'package:mhs/constants.dart';
 import 'package:mhs/loading_widget.dart';
 import 'package:mhs/models/attachment_model.dart';
 import 'package:mhs/models/check_box_model.dart';
+import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/registration/cold_store_user_registration.dart';
 import 'package:mhs/registration/registration_fields.dart';
+import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/checkbox_listtile_container.dart';
 import 'package:mhs/widgets/document_viewer.dart';
+import 'package:mhs/widgets/drop_down_menu.dart';
 import 'package:mhs/widgets/picker_widget.dart';
+import 'package:provider/provider.dart';
 
 class ColdStoreOwnerRegistration extends StatefulWidget {
   const ColdStoreOwnerRegistration({super.key});
@@ -33,6 +38,8 @@ class _ColdStoreOwnerRegistrationState
   String businessEmail = "";
   String password = "";
   String confirmPassword = "";
+  String selectedBlock = "";
+  String selectedColdStorage = "";
   TextEditingController businessNameController = TextEditingController();
   TextEditingController businessNameArabicController = TextEditingController();
   TextEditingController businessRegistrationController =
@@ -53,10 +60,13 @@ class _ColdStoreOwnerRegistrationState
   List<CheckBoxModel> businessList = [
     CheckBoxModel(title: "Whole Sale Area", status: false, value: ""),
     CheckBoxModel(title: "Cold Storage Area", status: false, value: ""),
-    CheckBoxModel(title: "Onion & Potato Area", status: false, value: ""),
+    CheckBoxModel(title: "Onion Area", status: false, value: ""),
+    CheckBoxModel(title: "Potato Area", status: false, value: ""),
     CheckBoxModel(title: "Sell from the truck Area", status: false, value: ""),
   ];
+  DropDownMenuDataModel storage = Constants.coldStorageBlock[0];
   List<bool> businessListBool = [
+    false,
     false,
     false,
     false,
@@ -68,6 +78,19 @@ class _ColdStoreOwnerRegistrationState
       attachments = files;
     });
   }
+
+  void getValues(String type, String value, String id) {
+    if (type == "block") {
+      selectedColdStorage = "";
+      selectedBlock = value;
+      Provider.of<StorageProvider>(context, listen: false)
+          .getColdStorageBlock(selectedBlock);
+    } else if (type == "coldStorage") {
+      selectedColdStorage = value;
+    }
+  }
+
+  void getColdStorage() {}
 
   @override
   void initState() {
@@ -374,8 +397,19 @@ class _ColdStoreOwnerRegistrationState
     businessList[i] = cm;
   }
 
+  void changeStatus(int i) {
+    businessListBool[i] = !businessListBool[i];
+    if (businessListBool[0]) {
+      Provider.of<StorageProvider>(context, listen: false)
+          .getWholeSaleArea("wholeSale");
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
+    final wholeSale = Provider.of<StorageProvider>(context).wholeSaleArea;
+    final coldStorage = Provider.of<StorageProvider>(context).coldStorageArea;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: count == 2 ? true : false,
@@ -456,9 +490,9 @@ class _ColdStoreOwnerRegistrationState
                     IndexedStack(
                       index: count,
                       children: [
-                        RegistrationFields(
-                          getData: parseData,
-                        ),
+                        // RegistrationFields(
+                        //   getData: parseData,
+                        // ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -538,8 +572,7 @@ class _ColdStoreOwnerRegistrationState
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
-                                          color: AppTheme.blackColor
-                                              .withOpacity(0.5)),
+                                          color: AppTheme.orangeColor),
                                     ),
                                     const SizedBox(
                                       width: 10,
@@ -582,13 +615,13 @@ class _ColdStoreOwnerRegistrationState
                               child: TextField(
                                 controller: businessAddressController,
                                 keyboardType: TextInputType.emailAddress,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     Icons.info,
-                                    color: Colors.black,
+                                    color: AppTheme.orangeColor,
                                   ),
                                   contentPadding:
-                                      EdgeInsets.symmetric(vertical: 5),
+                                      const EdgeInsets.symmetric(vertical: 5),
                                   labelText: "Company Address* ",
                                 ),
                                 cursorColor: AppTheme.primaryColor,
@@ -598,16 +631,106 @@ class _ColdStoreOwnerRegistrationState
                                 },
                               ),
                             ),
+
                             Card(
-                              child: Column(
-                                children: [
-                                  for (int i = 0; i < businessList.length; i++)
-                                    CheckBoxListTileContainer(
-                                      cm: businessList[i],
-                                      parseData: getCheckBoxData,
-                                      index: i,
-                                    )
-                                ],
+                              color: AppTheme.primaryColor.withOpacity(0.1),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    const Text(
+                                      "Select Warehouse Details",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    for (int i = 0;
+                                        i < businessList.length;
+                                        i++)
+                                      Card(
+                                        child: Column(
+                                          children: [
+                                            //
+                                            CheckBoxContainer(
+                                              check: businessListBool[i],
+                                              tapped: () => changeStatus(i),
+                                              title: businessList[i].title,
+                                              iconImage:
+                                                  "assets/images/warehouse_building.png",
+                                            ),
+                                            if (businessListBool[0] && i == 0)
+                                              Card(
+                                                color: AppTheme.primaryColor
+                                                    .withOpacity(0.1),
+                                                child: DropDownMenu(
+                                                  getValues,
+                                                  "Whole Sale Area",
+                                                  icon:
+                                                      'assets/images/warehouse.png',
+                                                  wholeSale,
+                                                  Constants.a,
+                                                  "wholeSale",
+                                                  showBorder: true,
+                                                ),
+                                              ),
+                                            if (businessListBool[1] && i == 1)
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Card(
+                                                      color: AppTheme
+                                                          .primaryColor
+                                                          .withOpacity(0.1),
+                                                      child: DropDownMenu(
+                                                        getValues,
+                                                        "Block",
+                                                        icon:
+                                                            'assets/images/warehouse.png',
+                                                        Constants
+                                                            .coldStorageBlock,
+                                                        storage,
+                                                        "block",
+                                                        showBorder: true,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  if (selectedBlock.isNotEmpty)
+                                                    Expanded(
+                                                      child: Card(
+                                                        color: AppTheme
+                                                            .primaryColor
+                                                            .withOpacity(0.1),
+                                                        child: DropDownMenu(
+                                                          getValues,
+                                                          "Cold Storage",
+                                                          icon:
+                                                              'assets/images/warehouse.png',
+                                                          coldStorage,
+                                                          Constants.a,
+                                                          "coldStorage",
+                                                          showBorder: true,
+                                                        ),
+                                                      ),
+                                                    )
+                                                ],
+                                              ),
+                                            // CheckBoxListTileContainer(
+                                            //   cm: businessList[i],
+                                            //   parseData: getCheckBoxData,
+                                            //   index: i,
+                                            // )
+                                          ],
+                                        ),
+                                      ),
+                                  ],
+                                ),
                               ),
                             ),
                             const SizedBox(
@@ -683,7 +806,7 @@ class _ColdStoreOwnerRegistrationState
                         ),
                         ColdStoreUserRegistration(
                           parseData: getUserData,
-                        )
+                        ),
                       ],
                     ),
                   ],

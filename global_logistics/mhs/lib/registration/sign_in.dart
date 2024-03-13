@@ -114,9 +114,11 @@ class _SignInState extends State<SignIn> {
                             height: 300,
                             width: 400,
                             decoration: const BoxDecoration(
-                              image: DecorationImage(image: AssetImage(
-                                  //'assets/images/logo_new.jpg',
-                                  'assets/images/logo.png'), fit: BoxFit.cover),
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      //'assets/images/logo_new.jpg',
+                                      'assets/images/logo_new.jpg'),
+                                  fit: BoxFit.cover),
                             ),
                           ),
                           const SizedBox(height: 30),

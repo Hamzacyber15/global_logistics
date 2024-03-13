@@ -7,12 +7,14 @@ class CheckBoxContainer extends StatelessWidget {
   final String title;
   final bool? showBorder;
   final double? verticalPadding;
+  final String? iconImage;
   const CheckBoxContainer(
       {required this.check,
       required this.tapped,
       required this.title,
       this.verticalPadding = 0,
       this.showBorder = false,
+      this.iconImage,
       super.key});
 
   @override
@@ -24,10 +26,16 @@ class CheckBoxContainer extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: CheckboxListTile(
-          secondary: Icon(
-            Icons.info,
-            color: AppTheme.primaryColor,
-          ),
+          secondary: iconImage != null
+              ? Image.asset(
+                  iconImage!,
+                  height: 25,
+                  width: 25,
+                )
+              : Icon(
+                  Icons.info,
+                  color: AppTheme.primaryColor,
+                ),
           activeColor: AppTheme.greenColor,
           checkColor: AppTheme.whiteColor,
           contentPadding:

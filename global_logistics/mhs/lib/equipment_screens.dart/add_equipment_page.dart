@@ -168,7 +168,7 @@ class _AddEquipmentPageState extends State<AddEquipmentPage> {
               child: DropDownMenu(
                   getValues,
                   "Equipment Type",
-                  const Icon(Icons.person),
+                  // const Icon(Icons.person),
                   Constants.equipmentType,
                   equipment,
                   "equipment"),

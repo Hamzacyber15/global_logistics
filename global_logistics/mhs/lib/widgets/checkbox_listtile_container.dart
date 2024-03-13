@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/constants.dart';
 import 'package:mhs/models/check_box_model.dart';
+import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/widgets/drop_down_menu.dart';
 
 class CheckBoxListTileContainer extends StatefulWidget {
   final CheckBoxModel cm;
@@ -21,6 +24,7 @@ class _CheckBoxListTileContainerState extends State<CheckBoxListTileContainer> {
   FocusNode focusNode = FocusNode();
   TextEditingController titleController = TextEditingController();
   ValueNotifier<bool> check = ValueNotifier<bool>(false);
+  DropDownMenuDataModel storage = Constants.coldStorageBlock[0];
 
   @override
   void initState() {
@@ -49,12 +53,30 @@ class _CheckBoxListTileContainerState extends State<CheckBoxListTileContainer> {
         widget.index);
   }
 
+  void getValues(String type, String value, String id) {
+    // selectedBlock = value;
+    //  getColdStorage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
         controlAffinity: ListTileControlAffinity.leading,
         checkboxShape: const CircleBorder(),
-        title: TextField(
+        title: //Text("data"),
+            // check.value
+            //     ? Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Block",
+            //             const Icon(Icons.build),
+            //             Constants.coldStorageBlock,
+            //             storage,
+            //             "block"),
+            //       )
+            //     : null,
+            TextField(
           controller: titleController,
           focusNode: focusNode,
           onChanged: (value) {

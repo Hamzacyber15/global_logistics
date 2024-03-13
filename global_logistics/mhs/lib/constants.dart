@@ -13,6 +13,10 @@ class Constants {
   static String businessId = "";
   static String profileId = "";
   static bool bigScreen = false;
+  static DropDownMenuDataModel a = DropDownMenuDataModel("", "A-1", "A-1");
+  static DropDownMenuDataModel d = DropDownMenuDataModel("", "A-1", "A-1");
+  static DropDownMenuDataModel o = DropDownMenuDataModel("", "A-1", "A-1");
+  static DropDownMenuDataModel p = DropDownMenuDataModel("", "A-1", "A-1");
   static List<DropDownMenuDataModel> countries = [
     DropDownMenuDataModel("", "Oman", "country"),
     DropDownMenuDataModel("", "United Arab Emirates", "country"),
@@ -29,6 +33,15 @@ class Constants {
     DropDownMenuDataModel("", "TukTuk Driver", "tuktuk driver"),
     DropDownMenuDataModel("", "Forklift Driver", "forklift driver"),
     DropDownMenuDataModel("", "Labour", "labour"),
+  ];
+
+  static List<DropDownMenuDataModel> businessArea = [
+    DropDownMenuDataModel("", "Whole Sale Area", "whole sale area"),
+    DropDownMenuDataModel("", "Cold Storage Area", "cold storage area"),
+    DropDownMenuDataModel("", "Onion Area", "onion area"),
+    DropDownMenuDataModel("", "Potato Area", "potato area"),
+    DropDownMenuDataModel(
+        "", "Sell from the truck Area", "sell from thr truck area"),
   ];
 
   static List<DropDownMenuDataModel> coldStorageBlock = [

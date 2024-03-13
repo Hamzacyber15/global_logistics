@@ -119,48 +119,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
 
   void getValues(String type, String value, String id) {
     selectedBlock = value;
-    getColdStorage();
-  }
-
-  void getColdStorage() async {
-    if (loading) {
-      return;
-    }
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    area.clear();
-    try {
-      await FirebaseFirestore.instance
-          .collection('centralColdStorage')
-          .where('block', isEqualTo: selectedBlock.toLowerCase())
-          .get()
-          .then((value) {
-        for (var doc in value.docs) {
-          StorageAreaModel? sm = StorageAreaModel.getStorageList(doc);
-          if (sm != null) {
-            areaList.add(sm);
-            area.add(DropDownMenuDataModel(
-                sm.id, sm.storage, "${"CDE-"}${sm.storage}"));
-            a = area[0];
-          }
-          areaList.sort(
-            (a, b) {
-              return a.storage.toLowerCase().compareTo(b.storage.toLowerCase());
-            },
-          );
-        }
-      });
-      setState(() {
-        loading = false;
-      });
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {}
+    //  getColdStorage();
   }
 
   void getDryStore() async {
@@ -372,7 +331,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                     child: DropDownMenu(
                         getValues,
                         "Block",
-                        const Icon(Icons.build),
+                        //  const Icon(Icons.build),
                         Constants.coldStorageBlock,
                         storage,
                         "block"),
@@ -392,8 +351,13 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                   ),
                   Card(
                     color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(getValues, "Cold Storgae",
-                        const Icon(Icons.build), area, a, "cold storage"),
+                    child: DropDownMenu(
+                        getValues,
+                        "Cold Storgae",
+                        //const Icon(Icons.build),
+                        area,
+                        a,
+                        "cold storage"),
                   ),
                 ],
               ),
@@ -410,8 +374,13 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                   ),
                   Card(
                     color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(getValues, "Dry Store",
-                        const Icon(Icons.build), dryStore, d, "dry store"),
+                    child: DropDownMenu(
+                        getValues,
+                        "Dry Store",
+                        //const Icon(Icons.build),
+                        dryStore,
+                        d,
+                        "dry store"),
                   ),
                 ],
               ),
@@ -428,8 +397,13 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                   ),
                   Card(
                     color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(getValues, "Onion Store",
-                        const Icon(Icons.build), onionStore, o, "onion store"),
+                    child: DropDownMenu(
+                        getValues,
+                        "Onion Store",
+                        // const Icon(Icons.build),
+                        onionStore,
+                        o,
+                        "onion store"),
                   ),
                 ],
               ),
@@ -449,7 +423,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                     child: DropDownMenu(
                         getValues,
                         "Potato Store",
-                        const Icon(Icons.build),
+                        // const Icon(Icons.build),
                         potatoStore,
                         p,
                         "potato store"),

@@ -5,13 +5,14 @@ import '../app_theme.dart';
 class DropDownMenu extends StatefulWidget {
   final Function getValues;
   final String title;
-  final Icon icon;
+  final String? icon;
   final List<DropDownMenuDataModel> list;
   final DropDownMenuDataModel initialValue;
   final String type;
-  const DropDownMenu(this.getValues, this.title, this.icon, this.list,
-      this.initialValue, this.type,
-      {super.key});
+  final bool? showBorder;
+  const DropDownMenu(
+      this.getValues, this.title, this.list, this.initialValue, this.type,
+      {this.icon, this.showBorder = false, super.key});
 
   @override
   State<DropDownMenu> createState() => _DropDownMenuState();
@@ -32,9 +33,21 @@ class _DropDownMenuState extends State<DropDownMenu> {
     return widget.list.map((e) {
       return PopupMenuItem(
         value: e,
-        child: Text(
-          e.title,
-          style: const TextStyle(),
+        child: Row(
+          children: [
+            Image.asset(
+              widget.icon!,
+              height: 20,
+              width: 20,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              e.title,
+              style: const TextStyle(),
+            ),
+          ],
         ),
       );
     }).toList();
@@ -53,7 +66,9 @@ class _DropDownMenuState extends State<DropDownMenu> {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-          // border: Border.all(color: AppTheme.blackColor.withOpacity(0.2)),
+          border: widget.showBorder!
+              ? Border.all(color: AppTheme.blackColor.withOpacity(0.05))
+              : null,
           color: AppTheme.whiteColor,
           borderRadius: BorderRadius.circular(8)),
       child: Center(
@@ -69,7 +84,13 @@ class _DropDownMenuState extends State<DropDownMenu> {
             visualDensity: VisualDensity.compact,
             minVerticalPadding: 0,
             dense: true,
-            // leading: widget.icon,
+            leading: widget.icon != null
+                ? Image.asset(
+                    widget.icon!,
+                    height: 20,
+                    width: 20,
+                  )
+                : null,
             title: isSelected
                 ? Text(
                     selected.title,

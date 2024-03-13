@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,15 +6,30 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/check_profile.dart';
+import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/registration/sign_in.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await Hive.initFlutter();
   //open the box
   await Hive.openBox("localMemory");
-  runApp(const MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<StorageProvider>(
+        create: (_) => StorageProvider(),
+      )
+    ],
+    child: EasyLocalization(
+      supportedLocales: const [Locale('en', 'US'), Locale('ar', 'SA')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en', 'US'),
+      child: const MyApp(),
+    ),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -43,6 +59,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       title: 'Global Logistics',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.getCurrentTheme(isDark),

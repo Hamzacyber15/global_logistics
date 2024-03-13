@@ -167,7 +167,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
               child: DropDownMenu(
                   getValues,
                   "Designation",
-                  const Icon(Icons.person),
+                  //  const Icon(Icons.person),
                   Constants.employeeCategory,
                   employee,
                   "employee"),
