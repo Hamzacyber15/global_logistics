@@ -20,17 +20,45 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   bool loading = false;
   List<bool> orderCategoryBool = [false, false];
   List<String> orderCategory = ["Indoor Handling", "OutDoor"];
-  List<String> equipmentType = ["Tuk Tuk", "Fork Lift"];
+  // List<String> equipmentType = ["Tuk Tuk", "Fork Lift"];
+  //   List<String> indoorEquipmentIcons = [
+  //   "assets/images/electric_forklift.png",
+  //   "assets/images/rideon_forklift.png",
+  // ];
+  // List<String> outdoorEquipmentIcons = [
+  //   "assets/images/4wheel_diesel_forklift.png",
+  //   "assets/images/electric_tuk-tuk.png",
+  //   "assets/images/tractor.png",
+  //   "assets/images/reefer_truck.png"
+  // ];
   List<DropDownMenuDataModel> indoorEquipmentType = [
-    DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift"),
-    DropDownMenuDataModel("", "Ride On ForkLift", "Ride On ForkLift")
+    DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift",
+        image: "assets/images/electric_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Ride On ForkLift",
+      "Ride On ForkLift",
+      image: "assets/images/rideon_forklift.png",
+    )
   ];
   List<DropDownMenuDataModel> outDoorEquipmentType = [
     DropDownMenuDataModel(
-        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift'),
-    DropDownMenuDataModel("", "Tuk Tuk Electric", "Tuk Tuk Electric"),
-    DropDownMenuDataModel("", "Tractor", "Tractor"),
-    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck")
+        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift',
+        image: "assets/images/4wheel_diesel_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Tuk Tuk Electric",
+      "Tuk Tuk Electric",
+      image: "assets/images/electric_tuk-tuk.png",
+    ),
+    DropDownMenuDataModel(
+      "",
+      "Tractor",
+      "Tractor",
+      image: "assets/images/tractor.png",
+    ),
+    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck",
+        image: "assets/images/reefer_truck.png")
   ];
 
   String selectedBlock = "";
@@ -50,16 +78,6 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   List<String> orderCategoryImage = [
     'assets/images/indoor.png',
     'assets/images/outdoor.png'
-  ];
-  List<String> indoorEquipmentIcons = [
-    "assets/images/electric_forklift.png",
-    "assets/images/rideon_forklift.png",
-  ];
-  List<String> outdoorEquipmentIcons = [
-    "assets/images/4wheel_diesel_forklift.png",
-    "assets/images/electric_tuk-tuk.png",
-    "assets/images/tractor.png",
-    "assets/images/reefer_truck.png"
   ];
 
   List<String> dropLocation = [
@@ -295,7 +313,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
           children: [
             Row(
               children: [
-                for (int i = 0; i < equipmentType.length; i++)
+                for (int i = 0; i < orderCategory.length; i++)
                   Expanded(
                     child: Card(
                       child: CheckBoxContainer(
@@ -313,7 +331,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                 child: DropDownMenu(
                     getValues,
                     "Indoor Equipment",
-                    icon: indoorEquipmentIcons[0],
+                    //icon: indoorEquipmentIcons[0],
                     indoorEquipmentType,
                     storage,
                     "block"),
@@ -324,25 +342,13 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                 child: DropDownMenu(
                     getValues,
                     "OutDoor Equipment",
-                    icon: outdoorEquipmentIcons[0],
+                    // icon: outdoorEquipmentIcons[0],
                     outDoorEquipmentType,
                     storage,
                     "block"),
               ),
-            for (int i = 0; i < equipmentType.length; i++)
-              Card(
-                child: SizedBox(
-                  height: 50,
-                  child: CheckBoxContainer(
-                      verticalPadding: 4,
-                      check: equipmentTypeBool[i],
-                      tapped: () => changeStatus("equipment", i),
-                      showBorder: true,
-                      title: equipmentType[i]),
-                ),
-              ),
             const SizedBox(
-              height: 20,
+              height: 10,
             ),
             // Container(
             //   padding: const EdgeInsets.all(12),

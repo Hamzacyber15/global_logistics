@@ -42,6 +42,12 @@ class _DropDownMenuState extends State<DropDownMenu> {
                 height: 25,
                 width: 25,
               ),
+            if (e.image != null)
+              Image.asset(
+                e.image!,
+                height: 35,
+                width: 35,
+              ),
             const SizedBox(
               width: 10,
             ),
@@ -96,19 +102,26 @@ class _DropDownMenuState extends State<DropDownMenu> {
                     height: 25,
                     width: 25,
                   )
-                : null,
+                : selected.image != null
+                    ? Image.asset(
+                        selected.image!,
+                        height: 35,
+                        width: 35,
+                      )
+                    : null,
             title: isSelected
                 ? Text(
                     selected.title,
                     maxLines: 1,
                     style: TextStyle(
                         color: AppTheme.blackColor,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14),
                   )
                 : Text(
                     widget.title,
                     maxLines: 1,
-                    style: TextStyle(color: AppTheme.blackColor),
+                    style: TextStyle(color: AppTheme.blackColor, fontSize: 14),
                   ),
             // subtitle: isSelected ? Text(selected.title) : const Text(''),
             trailing: const Icon(Icons.arrow_drop_down),
