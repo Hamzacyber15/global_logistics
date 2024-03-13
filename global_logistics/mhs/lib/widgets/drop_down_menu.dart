@@ -39,8 +39,8 @@ class _DropDownMenuState extends State<DropDownMenu> {
             if (widget.icon != null)
               Image.asset(
                 widget.icon!,
-                height: 20,
-                width: 20,
+                height: 25,
+                width: 25,
               ),
             const SizedBox(
               width: 10,
@@ -93,8 +93,8 @@ class _DropDownMenuState extends State<DropDownMenu> {
             leading: widget.icon != null
                 ? Image.asset(
                     widget.icon!,
-                    height: 20,
-                    width: 20,
+                    height: 25,
+                    width: 25,
                   )
                 : null,
             title: isSelected

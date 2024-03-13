@@ -1,15 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
-import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
 import 'package:mhs/widgets/check_box_container.dart';
-import 'package:mhs/widgets/custom_button.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 
 class PlaceAnOrder extends StatefulWidget {
@@ -24,13 +21,18 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   List<bool> orderCategoryBool = [false, false];
   List<String> orderCategory = ["Indoor Handling", "OutDoor"];
   List<String> equipmentType = ["Tuk Tuk", "Fork Lift"];
-  List<String> indoorEquipmentType = ["Electric ForkLift", "Ride On ForkLift"];
-  List<String> outDoorEquipmentType = [
-    '4 Wheel Diesel Forklift',
-    "Tuk Tuk Electric",
-    "Tractor",
-    "10-Ton Reefer Truck"
+  List<DropDownMenuDataModel> indoorEquipmentType = [
+    DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift"),
+    DropDownMenuDataModel("", "Ride On ForkLift", "Ride On ForkLift")
   ];
+  List<DropDownMenuDataModel> outDoorEquipmentType = [
+    DropDownMenuDataModel(
+        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift'),
+    DropDownMenuDataModel("", "Tuk Tuk Electric", "Tuk Tuk Electric"),
+    DropDownMenuDataModel("", "Tractor", "Tractor"),
+    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck")
+  ];
+
   String selectedBlock = "";
   List<StorageAreaModel> areaList = [];
   List<StorageAreaModel> dryStoreList = [];
@@ -305,6 +307,28 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                   ),
               ],
             ),
+            if (orderCategoryBool[0])
+              Card(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                child: DropDownMenu(
+                    getValues,
+                    "Indoor Equipment",
+                    icon: indoorEquipmentIcons[0],
+                    indoorEquipmentType,
+                    storage,
+                    "block"),
+              ),
+            if (orderCategoryBool[1])
+              Card(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                child: DropDownMenu(
+                    getValues,
+                    "OutDoor Equipment",
+                    icon: outdoorEquipmentIcons[0],
+                    outDoorEquipmentType,
+                    storage,
+                    "block"),
+              ),
             for (int i = 0; i < equipmentType.length; i++)
               Card(
                 child: SizedBox(
