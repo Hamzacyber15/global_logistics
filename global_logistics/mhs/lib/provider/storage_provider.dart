@@ -5,9 +5,15 @@ import 'package:mhs/models/storage_area_model.dart';
 
 class StorageProvider with ChangeNotifier {
   List<StorageAreaModel> coldStorageAreaList = [];
-  List<StorageAreaModel> wholeSaleList = [];
   List<DropDownMenuDataModel> coldStorageArea = [];
   List<DropDownMenuDataModel> wholeSaleArea = [];
+  List<StorageAreaModel> wholeSaleList = [];
+  List<DropDownMenuDataModel> onionArea = [];
+  List<StorageAreaModel> onionList = [];
+  List<DropDownMenuDataModel> potatoArea = [];
+  List<StorageAreaModel> potatoList = [];
+  List<DropDownMenuDataModel> sellFromTruckArea = [];
+  List<StorageAreaModel> sellFromTruckList = [];
   String selectedBlock = "";
 
   void getColdStorageBlock(String block) {
@@ -18,6 +24,10 @@ class StorageProvider with ChangeNotifier {
   void getWholeSaleArea(String area) {
     if (area == "wholeSale") {
       getWholeSale();
+    } else if (area == "onionShade") {
+      getOnionArea();
+    } else if (area == "potatoShade") {
+      getPotatoArea();
     }
   }
 
@@ -63,6 +73,51 @@ class StorageProvider with ChangeNotifier {
           wholeSaleList.add(sm);
           wholeSaleArea
               .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+  void getOnionArea() async {
+    coldStorageArea.clear();
+    try {
+      await FirebaseFirestore.instance
+          .collection('onionShade')
+          .where('status', isEqualTo: "active") //)
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          StorageAreaModel? sm = StorageAreaModel.getStorageList(doc);
+          if (sm != null) {
+            onionList.add(sm);
+            onionArea.add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+          }
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+  void getPotatoArea() async {
+    coldStorageArea.clear();
+    try {
+      await FirebaseFirestore.instance
+          .collection('potatoShade')
+          .where('status', isEqualTo: "active") //)
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          StorageAreaModel? sm = StorageAreaModel.getStorageList(doc);
+          if (sm != null) {
+            potatoList.add(sm);
+            potatoArea
+                .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+          }
         }
       });
       notifyListeners();

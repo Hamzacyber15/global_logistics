@@ -10,9 +10,7 @@ import 'package:mhs/models/check_box_model.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/registration/cold_store_user_registration.dart';
-import 'package:mhs/registration/registration_fields.dart';
 import 'package:mhs/widgets/check_box_container.dart';
-import 'package:mhs/widgets/checkbox_listtile_container.dart';
 import 'package:mhs/widgets/document_viewer.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 import 'package:mhs/widgets/picker_widget.dart';
@@ -38,8 +36,11 @@ class _ColdStoreOwnerRegistrationState
   String businessEmail = "";
   String password = "";
   String confirmPassword = "";
-  String selectedBlock = "";
+  List<String> selectedBlock = [""];
   String selectedColdStorage = "";
+  List<String> selectedWholeSaleArea = [""];
+  List<String> selectedOnionArea = [""];
+  List<String> selectedColdStorageArea = [""];
   TextEditingController businessNameController = TextEditingController();
   TextEditingController businessNameArabicController = TextEditingController();
   TextEditingController businessRegistrationController =
@@ -82,12 +83,12 @@ class _ColdStoreOwnerRegistrationState
   void getValues(String type, String value, String id) {
     if (type == "block") {
       selectedColdStorage = "";
-      selectedBlock = value;
+      selectedBlock[0] = value;
       Provider.of<StorageProvider>(context, listen: false)
-          .getColdStorageBlock(selectedBlock);
+          .getColdStorageBlock(selectedBlock[0]);
     } else if (type == "coldStorage") {
       selectedColdStorage = value;
-    }
+    } else if (type == "onionShade") {}
   }
 
   void getColdStorage() {}
@@ -402,6 +403,36 @@ class _ColdStoreOwnerRegistrationState
     if (businessListBool[0]) {
       Provider.of<StorageProvider>(context, listen: false)
           .getWholeSaleArea("wholeSale");
+    } else if (businessListBool[2]) {
+      Provider.of<StorageProvider>(context, listen: false)
+          .getWholeSaleArea("onionShade");
+    } else if (businessListBool[3]) {
+      Provider.of<StorageProvider>(context, listen: false)
+          .getWholeSaleArea("potatoShade");
+    }
+    setState(() {});
+  }
+
+  void addRow(int i) {
+    if (i == 2) {
+      selectedOnionArea.add("");
+    } else if (i == 0) {
+      selectedWholeSaleArea.add("");
+    } else if (i == 1) {
+      selectedColdStorageArea.add("");
+    }
+    setState(() {});
+  }
+
+  void deleteRow(int businessInt, int rowInt) {
+    if (businessInt == 2) {
+      if (selectedOnionArea.length != 1) {
+        selectedOnionArea.removeAt(rowInt);
+      }
+    } else if (businessInt == 0) {
+      if (selectedWholeSaleArea.length != 1) {
+        selectedWholeSaleArea.removeAt(rowInt);
+      }
     }
     setState(() {});
   }
@@ -410,6 +441,8 @@ class _ColdStoreOwnerRegistrationState
   Widget build(BuildContext context) {
     final wholeSale = Provider.of<StorageProvider>(context).wholeSaleArea;
     final coldStorage = Provider.of<StorageProvider>(context).coldStorageArea;
+    final onionStorage = Provider.of<StorageProvider>(context).onionArea;
+    final potatoStorage = Provider.of<StorageProvider>(context).potatoArea;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: count == 2 ? true : false,
@@ -655,78 +688,206 @@ class _ColdStoreOwnerRegistrationState
                                         i < businessList.length;
                                         i++)
                                       Card(
-                                        child: Column(
-                                          children: [
-                                            //
-                                            CheckBoxContainer(
-                                              check: businessListBool[i],
-                                              tapped: () => changeStatus(i),
-                                              title: businessList[i].title,
-                                              iconImage:
-                                                  "assets/images/warehouse_building.png",
-                                            ),
-                                            if (businessListBool[0] && i == 0)
-                                              Card(
-                                                color: AppTheme.primaryColor
-                                                    .withOpacity(0.1),
-                                                child: DropDownMenu(
-                                                  getValues,
-                                                  "Whole Sale Area",
-                                                  icon:
-                                                      'assets/images/warehouse.png',
-                                                  wholeSale,
-                                                  Constants.a,
-                                                  "wholeSale",
-                                                  showBorder: true,
-                                                ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              //
+                                              CheckBoxContainer(
+                                                check: businessListBool[i],
+                                                tapped: () => changeStatus(i),
+                                                title: businessList[i].title,
+                                                iconImage:
+                                                    "assets/images/warehouse_building.png",
                                               ),
-                                            if (businessListBool[1] && i == 1)
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    child: Card(
-                                                      color: AppTheme
-                                                          .primaryColor
-                                                          .withOpacity(0.1),
-                                                      child: DropDownMenu(
-                                                        getValues,
-                                                        "Block",
-                                                        icon:
-                                                            'assets/images/warehouse.png',
-                                                        Constants
-                                                            .coldStorageBlock,
-                                                        storage,
-                                                        "block",
-                                                        showBorder: true,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  if (selectedBlock.isNotEmpty)
-                                                    Expanded(
-                                                      child: Card(
-                                                        color: AppTheme
-                                                            .primaryColor
-                                                            .withOpacity(0.1),
-                                                        child: DropDownMenu(
-                                                          getValues,
-                                                          "Cold Storage",
-                                                          icon:
-                                                              'assets/images/warehouse.png',
-                                                          coldStorage,
-                                                          Constants.a,
-                                                          "coldStorage",
-                                                          showBorder: true,
+                                              if (businessListBool[0] && i == 0)
+                                                for (int a = 0;
+                                                    a <
+                                                        selectedWholeSaleArea
+                                                            .length;
+                                                    a++)
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Card(
+                                                          color: AppTheme
+                                                              .primaryColor
+                                                              .withOpacity(0.1),
+                                                          child: DropDownMenu(
+                                                            getValues,
+                                                            "Whole Sale Area",
+                                                            icon:
+                                                                'assets/images/warehouse.png',
+                                                            wholeSale,
+                                                            Constants.a,
+                                                            "wholeSale",
+                                                            showBorder: true,
+                                                          ),
                                                         ),
                                                       ),
-                                                    )
-                                                ],
-                                              ),
-                                            // CheckBoxListTileContainer(
-                                            //   cm: businessList[i],
-                                            //   parseData: getCheckBoxData,
-                                            //   index: i,
-                                            // )
-                                          ],
+                                                      IconButton(
+                                                        onPressed: () =>
+                                                            deleteRow(i, a),
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                        color:
+                                                            AppTheme.redColor,
+                                                      ),
+                                                    ],
+                                                  ),
+                                              if (businessListBool[1] && i == 1)
+                                                for (int b = 0;
+                                                    b <
+                                                        selectedColdStorageArea
+                                                            .length;
+                                                    b++)
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Card(
+                                                          color: AppTheme
+                                                              .primaryColor
+                                                              .withOpacity(0.1),
+                                                          child: DropDownMenu(
+                                                            getValues,
+                                                            "Block",
+                                                            icon:
+                                                                'assets/images/warehouse.png',
+                                                            Constants
+                                                                .coldStorageBlock,
+                                                            storage,
+                                                            "block",
+                                                            showBorder: true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      if (selectedBlock
+                                                          .isNotEmpty)
+                                                        Expanded(
+                                                          child: Card(
+                                                            color: AppTheme
+                                                                .primaryColor
+                                                                .withOpacity(
+                                                                    0.1),
+                                                            child: DropDownMenu(
+                                                              getValues,
+                                                              "Cold Storage",
+                                                              icon:
+                                                                  'assets/images/warehouse.png',
+                                                              coldStorage,
+                                                              Constants.a,
+                                                              "coldStorage",
+                                                              showBorder: true,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      IconButton(
+                                                        onPressed: () =>
+                                                            deleteRow(i, b),
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                        color:
+                                                            AppTheme.redColor,
+                                                      ),
+                                                    ],
+                                                  ),
+                                              if (businessListBool[2] && i == 2)
+                                                for (int j = 0;
+                                                    j <
+                                                        selectedOnionArea
+                                                            .length;
+                                                    j++)
+                                                  Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Card(
+                                                          color: AppTheme
+                                                              .primaryColor
+                                                              .withOpacity(0.1),
+                                                          child: DropDownMenu(
+                                                            getValues,
+                                                            "Onion Shade",
+                                                            icon:
+                                                                'assets/images/warehouse.png',
+                                                            onionStorage,
+                                                            Constants.a,
+                                                            "onionShade",
+                                                            showBorder: true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      // const SizedBox(
+                                                      //   width: 5,
+                                                      // ),
+                                                      IconButton(
+                                                        onPressed: () =>
+                                                            deleteRow(i, j),
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                        color:
+                                                            AppTheme.redColor,
+                                                      ),
+                                                      // Icon(
+                                                      //   Icons.delete,
+                                                      //   color:
+                                                      //       AppTheme.redColor,
+                                                      // ),
+                                                    ],
+                                                  ),
+                                              if (businessListBool[3] && i == 3)
+                                                Card(
+                                                  color: AppTheme.primaryColor
+                                                      .withOpacity(0.1),
+                                                  child: DropDownMenu(
+                                                    getValues,
+                                                    "Potato Shade",
+                                                    icon:
+                                                        'assets/images/warehouse.png',
+                                                    potatoStorage,
+                                                    Constants.a,
+                                                    "potatoShade",
+                                                    showBorder: true,
+                                                  ),
+                                                ),
+                                              if (businessListBool[i])
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                              if (businessListBool[i])
+                                                GestureDetector(
+                                                  onTap: () => addRow(i),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.add_box,
+                                                        color: AppTheme
+                                                            .primaryColor,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        "Add More",
+                                                        style: TextStyle(
+                                                            color: AppTheme
+                                                                .primaryColor,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )
+                                                    ],
+                                                  ),
+                                                )
+
+                                              // CheckBoxListTileContainer(
+                                              //   cm: businessList[i],
+                                              //   parseData: getCheckBoxData,
+                                              //   index: i,
+                                              // )
+                                            ],
+                                          ),
                                         ),
                                       ),
                                   ],
