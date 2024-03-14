@@ -58,16 +58,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void navOrder() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) {
-          return const PlaceAnOrder();
-        },
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
