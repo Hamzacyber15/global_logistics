@@ -21,6 +21,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   void getProfile() {
     Provider.of<StorageProvider>(context, listen: false).getBusinessProfile();
+    Provider.of<StorageProvider>(context, listen: false).getWholeSale();
+    Provider.of<StorageProvider>(context, listen: false).getOnionArea();
+    Provider.of<StorageProvider>(context, listen: false).getPotatoArea();
   }
 
   int index = 0;
