@@ -44,7 +44,9 @@ class BusinessProfileModelProfile {
     List<BusinessAreaModel> bm = [];
     for (var element in bArea) {
       bm.add(BusinessAreaModel(
-          title: element['title'] ?? "", value: element['value'] ?? ""));
+          id: element['id'] ?? "",
+          title: element['storage'] ?? "",
+          value: element['title'] ?? ""));
     }
     List<dynamic> certificate = data['certificate'] ?? [];
     List<String> c = [];

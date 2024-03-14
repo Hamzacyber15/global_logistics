@@ -16,10 +16,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  String businesId = "";
   @override
   void initState() {
     super.initState();
-    //getData();
+    // getData();
   }
 
   void getData() async {
@@ -29,13 +30,13 @@ class _HomeState extends State<Home> {
     PublicProfileModel? profile =
         await PublicProfileModel.getPublicProfile(user!.uid);
     if (profile != null) {
-      BusinessProfileModelProfile? businessProfile =
-          await BusinessProfileModelProfile.getPublicProfile(
-              profile.businessId!);
-      businessProfile = Constants.businessProfile;
+      // BusinessProfileModelProfile? businessProfile =
+      //     await BusinessProfileModelProfile.getPublicProfile(
+      //         profile.businessId!);
+      // businessProfile = Constants.businessProfile;
       profile = Constants.profile;
       myBox.put('profile', profile);
-      myBox.put("businessProfile", businessProfile);
+      //  myBox.put("businessProfile", businessProfile);
     }
   }
 
@@ -62,7 +63,9 @@ class _HomeState extends State<Home> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) {
-          return const PlaceAnOrder();
+          return PlaceAnOrder(
+            businessId: businesId,
+          );
         },
       ),
     );

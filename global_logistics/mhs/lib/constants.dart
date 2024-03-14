@@ -28,6 +28,36 @@ class Constants {
     DropDownMenuDataModel("", "Egypt", "country"),
   ];
 
+  static List<DropDownMenuDataModel> indoorEquipmentType = [
+    DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift",
+        image: "assets/images/electric_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Ride On ForkLift",
+      "Ride On ForkLift",
+      image: "assets/images/rideon_forklift.png",
+    )
+  ];
+  static List<DropDownMenuDataModel> outDoorEquipmentType = [
+    DropDownMenuDataModel(
+        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift',
+        image: "assets/images/4wheel_diesel_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Tuk Tuk Electric",
+      "Tuk Tuk Electric",
+      image: "assets/images/electric_tuk-tuk.png",
+    ),
+    DropDownMenuDataModel(
+      "",
+      "Tractor",
+      "Tractor",
+      image: "assets/images/tractor.png",
+    ),
+    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck",
+        image: "assets/images/reefer_truck.png")
+  ];
+
   static List<DropDownMenuDataModel> employeeCategory = [
     DropDownMenuDataModel("", "Operation Supervisor", "operation supervisor"),
     DropDownMenuDataModel("", "TukTuk Driver", "tuktuk driver"),

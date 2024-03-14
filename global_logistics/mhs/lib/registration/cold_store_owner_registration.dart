@@ -396,39 +396,6 @@ class _ColdStoreOwnerRegistrationState
     }
   }
 
-  void test() {
-    List<dynamic> selectedBusinessList = [];
-    for (var element in selectedColdAreaIdt) {
-      selectedBusinessList.add({
-        'title': "Cold Storage",
-        "storage": element.storage,
-        'id': element.id,
-      });
-    }
-    for (var element in selectedOnionAreaIdt) {
-      selectedBusinessList.add({
-        'title': "Onion Shade",
-        "storage": element.storage,
-        'id': element.id,
-      });
-    }
-    for (var element in selectedPotatoAreaIdt) {
-      selectedBusinessList.add({
-        'title': "Potato Shade",
-        "storage": element.storage,
-        'id': element.id,
-      });
-    }
-    for (var element in selectedWholeSaleAreaIdt) {
-      selectedBusinessList.add({
-        'title': "Whole Sale",
-        "storage": element.storage,
-        'id': element.id,
-      });
-    }
-    debugPrint(selectedBusinessList.toString());
-  }
-
   void navHome() {
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
+import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
@@ -10,7 +11,8 @@ import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 
 class PlaceAnOrder extends StatefulWidget {
-  const PlaceAnOrder({super.key});
+  final String businessId;
+  const PlaceAnOrder({required this.businessId, super.key});
 
   @override
   State<PlaceAnOrder> createState() => _PlaceAnOrderState();
@@ -19,48 +21,24 @@ class PlaceAnOrder extends StatefulWidget {
 class _PlaceAnOrderState extends State<PlaceAnOrder> {
   bool loading = false;
   List<bool> orderCategoryBool = [false, false];
-  List<String> orderCategory = ["Indoor Handling", "OutDoor"];
-  // List<String> equipmentType = ["Tuk Tuk", "Fork Lift"];
-  //   List<String> indoorEquipmentIcons = [
-  //   "assets/images/electric_forklift.png",
-  //   "assets/images/rideon_forklift.png",
-  // ];
-  // List<String> outdoorEquipmentIcons = [
-  //   "assets/images/4wheel_diesel_forklift.png",
-  //   "assets/images/electric_tuk-tuk.png",
-  //   "assets/images/tractor.png",
-  //   "assets/images/reefer_truck.png"
-  // ];
-  List<DropDownMenuDataModel> indoorEquipmentType = [
-    DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift",
-        image: "assets/images/electric_forklift.png"),
-    DropDownMenuDataModel(
-      "",
-      "Ride On ForkLift",
-      "Ride On ForkLift",
-      image: "assets/images/rideon_forklift.png",
-    )
-  ];
-  List<DropDownMenuDataModel> outDoorEquipmentType = [
-    DropDownMenuDataModel(
-        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift',
-        image: "assets/images/4wheel_diesel_forklift.png"),
-    DropDownMenuDataModel(
-      "",
-      "Tuk Tuk Electric",
-      "Tuk Tuk Electric",
-      image: "assets/images/electric_tuk-tuk.png",
-    ),
-    DropDownMenuDataModel(
-      "",
-      "Tractor",
-      "Tractor",
-      image: "assets/images/tractor.png",
-    ),
-    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck",
-        image: "assets/images/reefer_truck.png")
-  ];
-
+  List<String> orderCategory = ["Indoor Handling", "Outdoor"];
+  BusinessProfileModel business = BusinessProfileModel(
+      id: "",
+      businessAddress: "",
+      businessAreas: [],
+      certificate: [],
+      nameArabic: "",
+      nameEnglish: "",
+      phoneNumber: "",
+      registrationNum: "",
+      status: "",
+      userCountry: "",
+      userEmail: "",
+      userId: "",
+      userLanguage: "",
+      userMobile: "",
+      userName: "",
+      userAttachment: []);
   String selectedBlock = "";
   List<StorageAreaModel> areaList = [];
   List<StorageAreaModel> dryStoreList = [];
@@ -98,6 +76,35 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   @override
   void initState() {
     super.initState();
+    getBusinessProfile();
+  }
+
+  void getBusinessProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    try {
+      await FirebaseFirestore.instance
+          .collection('business')
+          .doc(widget.businessId)
+          .get()
+          .then((doc) {
+        BusinessProfileModel? bp = BusinessProfileModel.getBusinessList(doc);
+        if (bp != null) {
+          business = bp;
+        }
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   void changeStatus(String type, int i) {
@@ -106,7 +113,13 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
       equipmentTypeBool[i] = !equipmentTypeBool[i];
       //});
     } else {
-      orderCategoryBool[i] = !orderCategoryBool[i];
+      for (int j = 0; j < orderCategoryBool.length; j++) {
+        if (j == i) {
+          orderCategoryBool[j] = true;
+        } else {
+          orderCategoryBool[j] = false;
+        }
+      }
     }
     setState(() {});
   }
@@ -332,7 +345,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                     getValues,
                     "Indoor Equipment",
                     //icon: indoorEquipmentIcons[0],
-                    indoorEquipmentType,
+                    Constants.indoorEquipmentType,
                     storage,
                     "block"),
               ),
@@ -343,7 +356,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                     getValues,
                     "OutDoor Equipment",
                     // icon: outdoorEquipmentIcons[0],
-                    outDoorEquipmentType,
+                    Constants.outDoorEquipmentType,
                     storage,
                     "block"),
               ),
