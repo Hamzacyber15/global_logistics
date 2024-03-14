@@ -8,6 +8,7 @@ class CheckBoxContainer extends StatelessWidget {
   final bool? showBorder;
   final double? verticalPadding;
   final String? iconImage;
+  final String? subtitleText;
   const CheckBoxContainer(
       {required this.check,
       required this.tapped,
@@ -15,6 +16,7 @@ class CheckBoxContainer extends StatelessWidget {
       this.verticalPadding = 0,
       this.showBorder = false,
       this.iconImage,
+      this.subtitleText,
       super.key});
 
   @override
@@ -57,6 +59,12 @@ class CheckBoxContainer extends StatelessWidget {
                 fontSize: 14,
                 color: AppTheme.blackColor),
           ),
+          subtitle: subtitleText != null
+              ? Text(
+                  subtitleText!,
+                  style: const TextStyle(fontSize: 14),
+                )
+              : null,
         ),
       ),
     );

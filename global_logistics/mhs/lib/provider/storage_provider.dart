@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mhs/constants.dart';
+import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 
@@ -15,6 +18,23 @@ class StorageProvider with ChangeNotifier {
   List<DropDownMenuDataModel> sellFromTruckArea = [];
   List<StorageAreaModel> sellFromTruckList = [];
   String selectedBlock = "";
+  BusinessProfileModel business = BusinessProfileModel(
+      id: "",
+      businessAddress: "",
+      businessAreas: [],
+      certificate: [],
+      nameArabic: "",
+      nameEnglish: "",
+      phoneNumber: "",
+      registrationNum: "",
+      status: "",
+      userCountry: "",
+      userEmail: "",
+      userId: "",
+      userLanguage: "",
+      userMobile: "",
+      userName: "",
+      userAttachment: []);
 
   void getColdStorageBlock(String block) {
     selectedBlock = block;
@@ -29,6 +49,31 @@ class StorageProvider with ChangeNotifier {
     } else if (area == "potatoShade") {
       getPotatoArea();
     }
+  }
+
+  void getBusinessProfile() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    try {
+      await FirebaseFirestore.instance
+          .collection('business')
+          .where('userId', isEqualTo: user.uid)
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          BusinessProfileModel? bp = BusinessProfileModel.getBusinessList(doc);
+          if (bp != null) {
+            business = bp;
+            Constants.businessId = business.id;
+          }
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
   }
 
   void getColdStorage() async {

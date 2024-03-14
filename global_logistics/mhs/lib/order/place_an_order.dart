@@ -3,16 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
+import 'package:mhs/models/business/business_area_model.dart';
 import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
+import 'package:mhs/provider/storage_provider.dart';
+import 'package:mhs/widgets/business_area_list.dart';
 import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
+import 'package:provider/provider.dart';
 
 class PlaceAnOrder extends StatefulWidget {
-  final String businessId;
-  const PlaceAnOrder({required this.businessId, super.key});
+  const PlaceAnOrder({super.key});
 
   @override
   State<PlaceAnOrder> createState() => _PlaceAnOrderState();
@@ -22,23 +25,8 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
   bool loading = false;
   List<bool> orderCategoryBool = [false, false];
   List<String> orderCategory = ["Indoor Handling", "Outdoor"];
-  BusinessProfileModel business = BusinessProfileModel(
-      id: "",
-      businessAddress: "",
-      businessAreas: [],
-      certificate: [],
-      nameArabic: "",
-      nameEnglish: "",
-      phoneNumber: "",
-      registrationNum: "",
-      status: "",
-      userCountry: "",
-      userEmail: "",
-      userId: "",
-      userLanguage: "",
-      userMobile: "",
-      userName: "",
-      userAttachment: []);
+  BusinessAreaModel businessArea =
+      BusinessAreaModel(title: "", value: "", id: "");
   String selectedBlock = "";
   List<StorageAreaModel> areaList = [];
   List<StorageAreaModel> dryStoreList = [];
@@ -58,89 +46,37 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
     'assets/images/outdoor.png'
   ];
 
-  List<String> dropLocation = [
-    "Cold Storage",
-    "Dry Store",
-    "Onion Shade",
-    "Potato Shade"
-  ];
-  List<bool> dropLocationBool = [
-    false,
-    false,
-    false,
-    false,
-  ];
-  List<bool> equipmentTypeBool = [false, false];
   //BusinessProfileModel businessProfile =
 
-  @override
-  void initState() {
-    super.initState();
-    getBusinessProfile();
-  }
-
-  void getBusinessProfile() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return;
-    }
-    setState(() {
-      loading = true;
-    });
-    try {
-      await FirebaseFirestore.instance
-          .collection('business')
-          .doc(widget.businessId)
-          .get()
-          .then((doc) {
-        BusinessProfileModel? bp = BusinessProfileModel.getBusinessList(doc);
-        if (bp != null) {
-          business = bp;
-        }
-      });
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
   void changeStatus(String type, int i) {
-    if (type == "equipment") {
-      //setState(() {
-      equipmentTypeBool[i] = !equipmentTypeBool[i];
-      //});
-    } else {
-      for (int j = 0; j < orderCategoryBool.length; j++) {
-        if (j == i) {
-          orderCategoryBool[j] = true;
-        } else {
-          orderCategoryBool[j] = false;
-        }
+    for (int j = 0; j < orderCategoryBool.length; j++) {
+      if (j == i) {
+        orderCategoryBool[j] = true;
+      } else {
+        orderCategoryBool[j] = false;
       }
     }
+
     setState(() {});
   }
 
-  void changeLocationStatus(int selectedIndex) {
-    dropLocationBool[selectedIndex] = true;
+  // void changeLocationStatus(int selectedIndex) {
+  //   dropLocationBool[selectedIndex] = true;
 
-    for (int i = 0; i < dropLocationBool.length; i++) {
-      if (i != selectedIndex) {
-        dropLocationBool[i] = false;
-      }
-    }
-    if (dropLocationBool[1]) {
-      getDryStore();
-    } else if (dropLocationBool[2]) {
-      getOnionStore();
-    } else if (dropLocationBool[3]) {
-      getPotatoStore();
-    }
-    setState(() {});
-  }
+  //   for (int i = 0; i < dropLocationBool.length; i++) {
+  //     if (i != selectedIndex) {
+  //       dropLocationBool[i] = false;
+  //     }
+  //   }
+  //   if (dropLocationBool[1]) {
+  //     getDryStore();
+  //   } else if (dropLocationBool[2]) {
+  //     getOnionStore();
+  //   } else if (dropLocationBool[3]) {
+  //     getPotatoStore();
+  //   }
+  //   setState(() {});
+  // }
 
   void placeOrder() async {
     if (loading) {
@@ -151,12 +87,12 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
       return;
     }
     String selectedEquipment = "";
-    if (equipmentTypeBool[0]) {
-      //"Tuk Tuk", "Fork Lift"
-      selectedEquipment = "Tuk Tuk";
-    } else {
-      selectedEquipment = "Fork Lift";
-    }
+    // if (equipmentTypeBool[0]) {
+    //   //"Tuk Tuk", "Fork Lift"
+    //   selectedEquipment = "Tuk Tuk";
+    // } else {
+    //   selectedEquipment = "Fork Lift";
+    // }
     setState(() {
       loading = true;
     });
@@ -313,8 +249,14 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
     }));
   }
 
+  void getData(BusinessAreaModel bm) {
+    businessArea = bm;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final BusinessProfileModel business =
+        Provider.of<StorageProvider>(context).business;
     return Scaffold(
       appBar: AppBar(
         title: const Text("Place An Order"),
@@ -376,146 +318,160 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
             //         color: AppTheme.whiteColor),
             //   ),
             // ),
-            Text(
-              "Select Unloading Location",
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.primaryColor),
-            ),
+            // Text(
+            //   "Select Unloading Location",
+            //   style: TextStyle(
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.bold,
+            //       color: AppTheme.primaryColor),
+            // ),
             const SizedBox(
               height: 5,
             ),
-            for (int i = 0; i < dropLocation.length; i++)
-              Card(
-                child: SizedBox(
-                  height: 50,
-                  child: CheckBoxContainer(
-                      verticalPadding: 4,
-                      check: dropLocationBool[i],
-                      tapped: () => changeLocationStatus(i),
-                      showBorder: true,
-                      title: dropLocation[i]),
-                ),
-              ),
-            const SizedBox(
-              height: 10,
-            ),
-            if (dropLocationBool[0])
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Select Cold Storage Block",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor),
-                  ),
-                  Card(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(
-                        getValues,
-                        "Block",
-                        //  const Icon(Icons.build),
-                        Constants.coldStorageBlock,
-                        storage,
-                        "block"),
-                  ),
-                ],
-              ),
-            if (selectedBlock.isNotEmpty && dropLocationBool[0])
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Select Cold Storage Area",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor),
-                  ),
-                  Card(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(
-                        getValues,
-                        "Cold Storgae",
-                        //const Icon(Icons.build),
-                        area,
-                        a,
-                        "cold storage"),
-                  ),
-                ],
-              ),
-            if (dropLocationBool[1])
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Select Dry Store Area",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor),
-                  ),
-                  Card(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(
-                        getValues,
-                        "Dry Store",
-                        //const Icon(Icons.build),
-                        dryStore,
-                        d,
-                        "dry store"),
-                  ),
-                ],
-              ),
-            if (dropLocationBool[2])
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Select Onion Store Area",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor),
-                  ),
-                  Card(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(
-                        getValues,
-                        "Onion Store",
-                        // const Icon(Icons.build),
-                        onionStore,
-                        o,
-                        "onion store"),
-                  ),
-                ],
-              ),
-            if (dropLocationBool[3])
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Select Potato Store Area",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primaryColor),
-                  ),
-                  Card(
-                    color: AppTheme.primaryColor.withOpacity(0.1),
-                    child: DropDownMenu(
-                        getValues,
-                        "Potato Store",
-                        // const Icon(Icons.build),
-                        potatoStore,
-                        p,
-                        "potato store"),
-                  ),
-                ],
-              ),
+
+            BusinessAreaList(
+              bm: business.businessAreas,
+              tapped: getData,
+            )
+            // Card(
+            //   child: CheckBoxContainer(
+            //     iconImage: 'assets/images/warehouse_building.png',
+            //     check: false,
+            //     tapped: () {},
+            //     title: business.businessAreas[i].value,
+            //     subtitleText: business.businessAreas[i].title,
+            //   ),
+            // )
+            // for (int i = 0; i < dropLocation.length; i++)
+            //   Card(
+            //     child: SizedBox(
+            //       height: 50,
+            //       child: CheckBoxContainer(
+            //           verticalPadding: 4,
+            //           check: dropLocationBool[i],
+            //           tapped: () => changeLocationStatus(i),
+            //           showBorder: true,
+            //           title: dropLocation[i]),
+            //     ),
+            //   ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
+            // if (dropLocationBool[0])
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Select Cold Storage Block",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             color: AppTheme.primaryColor),
+            //       ),
+            //       Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Block",
+            //             //  const Icon(Icons.build),
+            //             Constants.coldStorageBlock,
+            //             storage,
+            //             "block"),
+            //       ),
+            //     ],
+            //   ),
+            // if (selectedBlock.isNotEmpty && dropLocationBool[0])
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Select Cold Storage Area",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             color: AppTheme.primaryColor),
+            //       ),
+            //       Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Cold Storgae",
+            //             //const Icon(Icons.build),
+            //             area,
+            //             a,
+            //             "cold storage"),
+            //       ),
+            //     ],
+            //   ),
+            // if (dropLocationBool[1])
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Select Dry Store Area",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             color: AppTheme.primaryColor),
+            //       ),
+            //       Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Dry Store",
+            //             //const Icon(Icons.build),
+            //             dryStore,
+            //             d,
+            //             "dry store"),
+            //       ),
+            //     ],
+            //   ),
+            // if (dropLocationBool[2])
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Select Onion Store Area",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             color: AppTheme.primaryColor),
+            //       ),
+            //       Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Onion Store",
+            //             // const Icon(Icons.build),
+            //             onionStore,
+            //             o,
+            //             "onion store"),
+            //       ),
+            //     ],
+            //   ),
+            // if (dropLocationBool[3])
+            //   Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Text(
+            //         "Select Potato Store Area",
+            //         style: TextStyle(
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold,
+            //             color: AppTheme.primaryColor),
+            //       ),
+            //       Card(
+            //         color: AppTheme.primaryColor.withOpacity(0.1),
+            //         child: DropDownMenu(
+            //             getValues,
+            //             "Potato Store",
+            //             // const Icon(Icons.build),
+            //             potatoStore,
+            //             p,
+            //             "potato store"),
+            //       ),
+            //     ],
+            //   ),
           ],
         ),
       ),

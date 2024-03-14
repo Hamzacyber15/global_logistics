@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/bottom_bar_screens.dart/home.dart';
 import 'package:mhs/bottom_bar_screens.dart/profile.dart';
+import 'package:mhs/provider/storage_provider.dart';
+import 'package:provider/provider.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key? key}) : super(key: key);
@@ -11,6 +13,16 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  @override
+  void initState() {
+    getProfile();
+    super.initState();
+  }
+
+  void getProfile() {
+    Provider.of<StorageProvider>(context, listen: false).getBusinessProfile();
+  }
+
   int index = 0;
   Widget getBody(int index) {
     // int providerIndex = context.read<ServicesProvider>().homeIndex;

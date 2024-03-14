@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
-import 'package:mhs/models/business_profile_model_profile.dart';
+import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/publicprofilemodel.dart';
 import 'package:mhs/order/place_an_order.dart';
+import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/registration/sign_in.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -16,11 +19,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  String businesId = "";
+  bool loading = false;
+
   @override
   void initState() {
     super.initState();
-    // getData();
   }
 
   void getData() async {
@@ -63,9 +66,7 @@ class _HomeState extends State<Home> {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) {
-          return PlaceAnOrder(
-            businessId: businesId,
-          );
+          return const PlaceAnOrder();
         },
       ),
     );
