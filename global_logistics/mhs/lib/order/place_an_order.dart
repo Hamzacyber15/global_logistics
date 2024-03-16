@@ -45,13 +45,27 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
         child: Column(
           children: [
             CupertinoSlidingSegmentedControl(
-              padding: const EdgeInsets.all(6),
-              children: const {
-                0: BuildSegment(
+              padding: const EdgeInsets.all(10),
+              children: {
+                0: Text(
                   "Order Now",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: groupValueCount == 0
+                          ? AppTheme.blackColor
+                          : AppTheme.whiteColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
                 ),
-                1: BuildSegment(
+                1: Text(
                   "Schedule Order",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: groupValueCount == 1
+                          ? AppTheme.blackColor
+                          : AppTheme.whiteColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600),
                 ),
               },
               backgroundColor: AppTheme.primaryColor,
@@ -61,7 +75,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
               },
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             groupValueCount == 0 ? const OrderNow() : const OrderNow()
 
