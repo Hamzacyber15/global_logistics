@@ -11,28 +11,33 @@ import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/business_area_list.dart';
 import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
+import 'package:mhs/widgets/time_container.dart';
 import 'package:provider/provider.dart';
 
-class OrderNow extends StatefulWidget {
-  const OrderNow({super.key});
+class ScheduleOrder extends StatefulWidget {
+  const ScheduleOrder({super.key});
 
   @override
-  State<OrderNow> createState() => _OrderNowState();
+  State<ScheduleOrder> createState() => _ScheduleOrderState();
 }
 
-class _OrderNowState extends State<OrderNow> {
+class _ScheduleOrderState extends State<ScheduleOrder> {
   bool loading = false;
   List<bool> orderCategoryBool = [true, false];
   List<String> orderCategory = ["Indoor Handling", "Outdoor"];
   BusinessAreaModel businessArea =
       BusinessAreaModel(title: "", value: "", id: "");
   String selectedBuildingCategory = "";
+  String startDate = "";
   DropDownMenuDataModel a = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel d = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel o = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel p = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel storage = Constants.coldStorageBlock[0];
   List<DropDownMenuDataModel> indoorList = [];
+  DateTime dtStartDate = DateTime.now();
+  TimeOfDay startTime = TimeOfDay.now();
+  TimeOfDay time = TimeOfDay.now();
   List<String> orderCategoryImage = [
     'assets/images/indoor.png',
     'assets/images/outdoor.png'
@@ -135,12 +140,70 @@ class _OrderNowState extends State<OrderNow> {
     setState(() {});
   }
 
+  Future pickTime(BuildContext context, String type) async {
+    final newTime = await showTimePicker(context: context, initialTime: time);
+    if (newTime == null) return;
+    startTime = newTime;
+    pickDate();
+  }
+
+  void pickDate() {
+    selectDate(context);
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    DateTime? tDate = (await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2050),
+    ));
+    if (tDate != null) {
+      dtStartDate = DateTime(
+          tDate.year, tDate.month, tDate.day, startTime.hour, startTime.minute);
+      startDate = "${dtStartDate.day}-${dtStartDate.month}-${dtStartDate.year}";
+    }
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
         Provider.of<StorageProvider>(context).business;
     return Column(
       children: [
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () => pickTime(context, "sTime"),
+                child: TimeContainer(
+                  titleText: "Date",
+                  subtitleText: startDate,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: GestureDetector(
+                  onTap: () => pickTime(context, "sTime"),
+                  child: TimeContainer(
+                    titleText: "Time",
+                    subtitleText:
+                        "${startTime.hour.toString().padLeft(2, "0")} : ${startTime.minute.toString().padLeft(2, '0')}",
+                  )),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
         Row(
           children: [
             for (int i = 0; i < orderCategory.length; i++)
@@ -191,25 +254,13 @@ class _OrderNowState extends State<OrderNow> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.pallet,
-                          color: AppTheme.whiteColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Select PickUp Location",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.whiteColor),
-                        ),
-                      ],
+                    Text(
+                      "Select loading Location",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.whiteColor),
                     ),
-
                     // const SizedBox(
                     //   width: 20,
                     // ),
@@ -239,27 +290,12 @@ class _OrderNowState extends State<OrderNow> {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: AppTheme.primaryColor),
-          child: Row(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.pallet,
-                    color: AppTheme.whiteColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Select Unloading Location",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.whiteColor),
-                  ),
-                ],
-              ),
-            ],
+          child: Text(
+            "Select Unloading Location",
+            style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.whiteColor),
           ),
         ),
         const SizedBox(

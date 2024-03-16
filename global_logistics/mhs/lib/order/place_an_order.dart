@@ -1,21 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
-import 'package:mhs/constants.dart';
-import 'package:mhs/models/business/business_area_model.dart';
-import 'package:mhs/models/business/business_profile.dart';
-import 'package:mhs/models/drop_down_menu_model.dart';
-import 'package:mhs/models/storage_area_model.dart';
-import 'package:mhs/order/confirm_order_details.dart';
 import 'package:mhs/order/order_now.dart';
-import 'package:mhs/provider/storage_provider.dart';
-import 'package:mhs/widgets/build_segment.dart';
-import 'package:mhs/widgets/business_area_list.dart';
-import 'package:mhs/widgets/check_box_container.dart';
-import 'package:mhs/widgets/drop_down_menu.dart';
-import 'package:provider/provider.dart';
+import 'package:mhs/order/schedule_order.dart';
 
 class PlaceAnOrder extends StatefulWidget {
   const PlaceAnOrder({super.key});
@@ -42,8 +29,11 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(
+        child: ListView(
           children: [
+            const SizedBox(
+              height: 10,
+            ),
             CupertinoSlidingSegmentedControl(
               padding: const EdgeInsets.all(10),
               children: {
@@ -54,7 +44,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                       color: groupValueCount == 0
                           ? AppTheme.blackColor
                           : AppTheme.whiteColor,
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
                 1: Text(
@@ -64,7 +54,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
                       color: groupValueCount == 1
                           ? AppTheme.blackColor
                           : AppTheme.whiteColor,
-                      fontSize: 14,
+                      fontSize: 16,
                       fontWeight: FontWeight.w600),
                 ),
               },
@@ -77,7 +67,7 @@ class _PlaceAnOrderState extends State<PlaceAnOrder> {
             const SizedBox(
               height: 20,
             ),
-            groupValueCount == 0 ? const OrderNow() : const OrderNow()
+            groupValueCount == 0 ? const OrderNow() : const ScheduleOrder()
 
             // Card(
             //   child: CheckBoxContainer(
