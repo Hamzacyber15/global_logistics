@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/models/order_model.dart';
 
 class ConfirmOrderDetails extends StatefulWidget {
-  const ConfirmOrderDetails({super.key});
+  final OrderModel om;
+  const ConfirmOrderDetails({required this.om, super.key});
 
   @override
   State<ConfirmOrderDetails> createState() => _ConfirmOrderDetailsState();

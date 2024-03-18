@@ -116,12 +116,6 @@ class _ScheduleOrderState extends State<ScheduleOrder> {
     //  getColdStorage();
   }
 
-  void navConfirmOrder() {
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return const ConfirmOrderDetails();
-    }));
-  }
-
   void getData(BusinessAreaModel bm) {
     businessArea = bm;
     if (orderCategoryBool[0]) {

@@ -18,6 +18,7 @@ class StorageProvider with ChangeNotifier {
   List<DropDownMenuDataModel> sellFromTruckArea = [];
   List<StorageAreaModel> sellFromTruckList = [];
   String selectedBlock = "";
+  List<DropDownMenuDataModel> businessAreaList = [];
   BusinessProfileModel business = BusinessProfileModel(
       id: "",
       businessAddress: "",
@@ -68,6 +69,10 @@ class StorageProvider with ChangeNotifier {
             business = bp;
             Constants.businessId = business.id;
           }
+        }
+        for (var element in business.businessAreas) {
+          businessAreaList.add(
+              DropDownMenuDataModel(element.id, element.title, element.value));
         }
       });
       notifyListeners();

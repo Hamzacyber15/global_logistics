@@ -36,23 +36,50 @@ class Constants {
       "Ride On ForkLift",
       "Ride On ForkLift",
       image: "assets/images/rideon_forklift.png",
-    )
+    ),
   ];
   static List<DropDownMenuDataModel> outDoorEquipmentType = [
-    DropDownMenuDataModel(
-        "", '4 Wheel Diesel Forklift', '4 Wheel Diesel Forklift',
+    DropDownMenuDataModel("", 'Four Wheel Forklift', '4 Wheel Diesel Forklift',
         image: "assets/images/4wheel_diesel_forklift.png"),
     DropDownMenuDataModel(
       "",
-      "Tuk Tuk Electric",
-      "Tuk Tuk Electric",
+      "Electric Tuk Tuk",
+      "Electric Tuk Tuk",
       image: "assets/images/electric_tuk-tuk.png",
     ),
     DropDownMenuDataModel(
       "",
       "Tractor",
       "Tractor",
-      image: "assets/images/tractor.png",
+      image: "assets/images/tractor.jpeg",
+    ),
+    DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck",
+        image: "assets/images/reefer_truck.png")
+  ];
+
+  static List<DropDownMenuDataModel> equipmentType = [
+    DropDownMenuDataModel(
+        "", "3-Wheel Electric ForkLift", "3-Wheel Electric Forklift",
+        image: "assets/images/electric_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Ride On Electric ForkLift",
+      "Ride On Electric ForkLift",
+      image: "assets/images/rideon_forklift.png",
+    ),
+    DropDownMenuDataModel("", '4-Wheel Forklift', '4-Wheel Diesel Forklift',
+        image: "assets/images/4wheel_diesel_forklift.png"),
+    DropDownMenuDataModel(
+      "",
+      "Electric Tuk Tuk",
+      "Electric Tuk Tuk",
+      image: "assets/images/electric_tuk-tuk.png",
+    ),
+    DropDownMenuDataModel(
+      "",
+      "Tractor",
+      "Tractor",
+      image: "assets/images/tractor.jpeg",
     ),
     DropDownMenuDataModel("", "10-Ton Reefer Truck", "10-Ton Reefer Truck",
         image: "assets/images/reefer_truck.png")
@@ -66,6 +93,9 @@ class Constants {
   ];
 
   static List<DropDownMenuDataModel> businessArea = [
+    DropDownMenuDataModel("", "Parking Area (A)", "a"),
+    DropDownMenuDataModel("", "Parking Area (B)", "b"),
+    DropDownMenuDataModel("", "Parking Area (C)", "c"),
     DropDownMenuDataModel("", "Whole Sale Area", "whole sale area"),
     DropDownMenuDataModel("", "Cold Storage Area", "cold storage area"),
     DropDownMenuDataModel("", "Onion Area", "onion area"),
@@ -78,16 +108,6 @@ class Constants {
     DropDownMenuDataModel("", "D", "d"),
     DropDownMenuDataModel("", "E", "e"),
     DropDownMenuDataModel("", "F", "f"),
-  ];
-
-  static List<DropDownMenuDataModel> equipmentType = [
-    DropDownMenuDataModel("", "Electric TukTuk", "electric tuk tuk"),
-    DropDownMenuDataModel(
-        "", "Electric Ride-On Forklift", "electric ride-on forklift"),
-    DropDownMenuDataModel(
-        "", "Electric 3 Wheel Forklift", "electric 3wheel forklift"),
-    DropDownMenuDataModel(
-        "", "Diesel 4 Wheel Forklift", "diesel 4 wheel forklift"),
   ];
 
   static List<DropDownMenuDataModel> languageList = [

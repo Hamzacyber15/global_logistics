@@ -107,6 +107,25 @@ class _AdminSideMenuState extends State<AdminSideMenu> {
             endIndent: 20,
           ),
           ListTile(
+            onTap: () => adminNavigation("equipmentCharges"),
+            leading: Icon(
+              Icons.price_change,
+              color: AppTheme.whiteColor,
+            ),
+            title: Text(
+              'Equipment Charges',
+              style: TextStyle(
+                  fontSize: 16,
+                  color: AppTheme.whiteColor,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+          const Divider(
+            thickness: 1.2,
+            indent: 10,
+            endIndent: 20,
+          ),
+          ListTile(
             onTap: logout,
             leading: Icon(
               Icons.logout,

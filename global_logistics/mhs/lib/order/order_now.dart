@@ -6,6 +6,7 @@ import 'package:mhs/constants.dart';
 import 'package:mhs/models/business/business_area_model.dart';
 import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/order_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/business_area_list.dart';
@@ -26,12 +27,30 @@ class _OrderNowState extends State<OrderNow> {
   List<String> orderCategory = ["Indoor Handling", "Outdoor"];
   BusinessAreaModel businessArea =
       BusinessAreaModel(title: "", value: "", id: "");
-  String selectedBuildingCategory = "";
+  OrderModel order = OrderModel(
+      id: "",
+      delivery: "",
+      equipment: "",
+      pickUp: "",
+      indoorLocation: "",
+      indoorLocationId: "",
+      outdoorLocation: "",
+      outdoorBuilding: "",
+      outdoorlocationId: "",
+      block: "",
+      timestamp: Timestamp.now());
+  // String selectedBuildingCategory = "";
+  // String selectedEquipment = "";
+  // String indoorLocation = "";
+  // String indoorLocationId = "";
+  // String outdoorBuilding = "";
+  // String outdoorLocation = "";
+  // String outdoorLocationId = "";
+  // String deliveryType = "";
   DropDownMenuDataModel a = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel d = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel o = DropDownMenuDataModel("", "A-1", "A-1");
   DropDownMenuDataModel p = DropDownMenuDataModel("", "A-1", "A-1");
-  DropDownMenuDataModel storage = Constants.coldStorageBlock[0];
   List<DropDownMenuDataModel> indoorList = [];
   List<String> orderCategoryImage = [
     'assets/images/indoor.png',
@@ -60,24 +79,33 @@ class _OrderNowState extends State<OrderNow> {
     if (user == null) {
       return;
     }
-    String selectedEquipment = "";
-    // if (equipmentTypeBool[0]) {
-    //   //"Tuk Tuk", "Fork Lift"
-    //   selectedEquipment = "Tuk Tuk";
-    // } else {
-    //   selectedEquipment = "Fork Lift";
-    // }
+    if (orderCategoryBool[0]) {
+      //"Tuk Tuk", "Fork Lift"
+      order.delivery = "Indoor Handling";
+    } else {
+      order.delivery = "Outdoor";
+    }
     setState(() {
       loading = true;
+    });
+    dynamic pickUpLocation = 0;
+    businessArea = pickUpLocation({
+      'id': businessArea.id,
+      'title': businessArea.title,
+      'value': businessArea.value,
     });
     try {
       await FirebaseFirestore.instance.collection('orders').add({
         'businessId': Constants.businessId,
-        'equipment': selectedEquipment,
-        'storage': "coldStorage",
-        "block": "e",
-        "area": "CSE-30",
-        "areaId": "",
+        'delivery': order.delivery,
+        'equipment': order.equipment,
+        'pickUp': pickUpLocation,
+        'indoorLocation': order.indoorLocation,
+        'indoorLocationId': order.indoorLocationId,
+        'outdoorBuilding': order.outdoorBuilding,
+        'outdoorLocation': order.outdoorLocation,
+        'outdoorLocationId': order.outdoorlocationId,
+        "block": "",
         "timestamp": FieldValue.serverTimestamp()
       });
     } catch (e) {
@@ -90,8 +118,8 @@ class _OrderNowState extends State<OrderNow> {
   }
 
   void getValues(String type, String value, String id) {
-    if (type == "selectBuilding") {
-      selectedBuildingCategory = value;
+    if (type == "outdoorBuilding") {
+      order.outdoorBuilding = value;
       //indoorList.clear();
       if (value == "Cold Storage Area") {
         indoorList = Provider.of<StorageProvider>(context, listen: false)
@@ -106,14 +134,61 @@ class _OrderNowState extends State<OrderNow> {
         indoorList =
             Provider.of<StorageProvider>(context, listen: false).potatoArea;
       }
+    } else if (type == "equipment") {
+      order.equipment = value;
+    } else if (type == "indoorLocation") {
+      order.indoorLocation == value;
+      order.indoorLocationId == id;
+    }
+    // else if (type == "outdoorBuilding") {
+    //   order.outdoorBuilding == value;
+    // }
+    else if (type == "outdoorLocation") {
+      order.outdoorLocation == value;
+      order.outdoorlocationId == id;
     }
     setState(() {});
     //  getColdStorage();
   }
 
+  void checkCredentials() {
+    bool result = false;
+    if (orderCategoryBool[0]) {
+      if (order.equipment.isEmpty) {
+        Constants.showMessage(context, "Please Select Indoor Equipment");
+      }
+      return;
+    } else if (orderCategoryBool[1]) {
+      Constants.showMessage(context, "Please Select Outdoor Equipment");
+      return;
+    } else if (order.pickUp.isEmpty) {
+      Constants.showMessage(context, "Please Select Pick Up Location");
+      return;
+    } else if (orderCategoryBool[0]) {
+      if (order.indoorLocation.isEmpty) {
+        Constants.showMessage(
+            context, "Please Select Indoor Unloading/Handling Location");
+        return;
+      } else {
+        result = true;
+      }
+    } else if (orderCategoryBool[1]) {
+      if (order.outdoorBuilding.isEmpty) {
+        Constants.showMessage(context, "Please Select Outdoor Building");
+        return;
+      } else if (order.outdoorLocation.isEmpty) {
+        Constants.showMessage(
+            context, "Please Select Outdoor Unloading Location");
+        return;
+      } else {
+        result = true;
+      }
+    }
+  }
+
   void navConfirmOrder() {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-      return const ConfirmOrderDetails();
+      return ConfirmOrderDetails(om: order);
     }));
   }
 
@@ -135,10 +210,23 @@ class _OrderNowState extends State<OrderNow> {
     setState(() {});
   }
 
+  // void getOrderInformation() {
+  //   OrderModel om = OrderModel(id: "",
+  //   delivery: delivery, equipment: equipment, pickUp: pickUp, indoorLocation: indoorLocation, indoorLocationId: indoorLocationId, outdoorLocation: outdoorLocation, outdoorBuilding: outdoorBuilding, outdoorlocationId: outdoorlocationId, block: block, timestamp: timestamp)
+  // }
+
+  void navOrder() {
+    // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+    //   return  ConfirmOrderDetails();
+    // }));
+  }
+
   @override
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
         Provider.of<StorageProvider>(context).business;
+    // final List<DropDownMenuDataModel> businessAreaList =
+    //     Provider.of<StorageProvider>(context).businessAreaList;
     return Column(
       children: [
         Row(
@@ -163,8 +251,8 @@ class _OrderNowState extends State<OrderNow> {
                 "Indoor Equipment",
                 //icon: indoorEquipmentIcons[0],
                 Constants.indoorEquipmentType,
-                storage,
-                "block"),
+                a,
+                "equipment"),
           ),
         if (orderCategoryBool[1])
           Card(
@@ -174,20 +262,27 @@ class _OrderNowState extends State<OrderNow> {
                 "OutDoor Equipment",
                 // icon: outdoorEquipmentIcons[0],
                 Constants.outDoorEquipmentType,
-                storage,
-                "block"),
+                a,
+                "equipment"),
           ),
         const SizedBox(
           height: 20,
         ),
+        // Text(
+        //   "Select Indoor Handling Location",
+        //   style: TextStyle(
+        //       fontSize: 16,
+        //       fontWeight: FontWeight.bold,
+        //       color: AppTheme.blackColor),
+        // ),
         Card(
           child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: AppTheme.primaryColor),
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -195,18 +290,27 @@ class _OrderNowState extends State<OrderNow> {
                       children: [
                         Icon(
                           Icons.pallet,
-                          color: AppTheme.whiteColor,
+                          color: AppTheme.blackColor,
                         ),
                         const SizedBox(
                           width: 10,
                         ),
-                        Text(
-                          "Select PickUp Location",
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: AppTheme.whiteColor),
-                        ),
+                        if (orderCategoryBool[1])
+                          Text(
+                            "Select Pick Up Location",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.blackColor),
+                          ),
+                        if (orderCategoryBool[0])
+                          Text(
+                            "Select Indoor Handling Location",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.blackColor),
+                          ),
                       ],
                     ),
 
@@ -217,13 +321,28 @@ class _OrderNowState extends State<OrderNow> {
                       Icon(
                         Icons.check_box,
                         color: AppTheme.whiteColor,
-                      )
+                      ),
                   ],
                 ),
+              ),
+              const Divider(
+                endIndent: 10,
+                indent: 10,
+                //color: AppTheme.blackColor,
               ),
               const SizedBox(
                 height: 5,
               ),
+              // Card(
+              //   color: AppTheme.primaryColor.withOpacity(0.1),
+              //   child: DropDownMenu(
+              //       getValues,
+              //       "Outdoor Equipment",
+              //       // icon: outdoorEquipmentIcons[0],
+              //       businessAreaList,
+              //       storage,
+              //       "businessAreaList"),
+              // ),
               BusinessAreaList(
                 bm: business.businessAreas,
                 tapped: getData,
@@ -273,8 +392,8 @@ class _OrderNowState extends State<OrderNow> {
                 "Select Building",
                 //  const Icon(Icons.build),
                 indoorList,
-                storage,
-                "selectBuilding"),
+                a,
+                "indoorLocation"),
           ),
         if (orderCategoryBool[1])
           Card(
@@ -284,8 +403,8 @@ class _OrderNowState extends State<OrderNow> {
                 "Select Building",
                 //  const Icon(Icons.build),
                 Constants.businessArea,
-                storage,
-                "selectBuilding"),
+                a,
+                "outdoorBuilding"),
           ),
         if (orderCategoryBool[1] && indoorList.isNotEmpty)
           Card(
@@ -295,9 +414,16 @@ class _OrderNowState extends State<OrderNow> {
                 "Select Building",
                 //  const Icon(Icons.build),
                 indoorList,
-                storage,
-                "selectBuilding"),
+                a,
+                "outdoorLocation"),
           ),
+        const SizedBox(
+          height: 10,
+        ),
+        ElevatedButton(
+          onPressed: navConfirmOrder,
+          child: const Text("Preview Order"),
+        ),
       ],
     );
   }
