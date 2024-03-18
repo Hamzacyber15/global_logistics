@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
@@ -16,6 +18,7 @@ class AddEquipment extends StatefulWidget {
 }
 
 class _AddEquipmentState extends State<AddEquipment> {
+  bool loading = false;
   TextEditingController equipmentName = TextEditingController();
   TextEditingController price = TextEditingController();
   TextEditingController thirtyprice = TextEditingController();
@@ -44,6 +47,84 @@ class _AddEquipmentState extends State<AddEquipment> {
     setState(() {
       attachments = files;
     });
+  }
+
+  void saveEquipment() async {
+    if (loading) {
+      return;
+    }
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    List<String> urls = [];
+    for (AttachmentModel attachment in attachments) {
+      String url = await Constants.uploadAttachment(attachment);
+      urls.add(url);
+    }
+    if (urls.isEmpty) {
+      message("Please attach Front & Back Side of the id card");
+      return;
+    }
+    bool check = checkCredentials();
+    if (!check) {
+      return;
+    }
+    setState(() {
+      loading = true;
+    });
+    double p = double.tryParse(price.text.trim()) ?? 0;
+    double thiPrice = double.tryParse(thirtyprice.text.trim()) ?? 0;
+    double sPrice = double.tryParse(sixtyprice.text.trim()) ?? 0;
+    try {
+      await FirebaseFirestore.instance.collection('equipment').doc().set({
+        'equipmentTitle': equipmentName.text.trim(),
+        'equipmentCategory': selectedCategory,
+        'equipmentIcon': urls[0],
+        'status': "active",
+        'price': p,
+        'thirtyMinutePrice': thiPrice,
+        'sixtyMinutesPrice': sPrice,
+      }).then((value) {
+        Constants.showMessage(context, "Equipment Added");
+        Navigator.of(context).pop();
+      });
+      setState(() {
+        loading = false;
+      });
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void message(String title) {
+    Constants.showMessage(context, title);
+  }
+
+  bool checkCredentials() {
+    bool result = false;
+    if (equipmentName.text.trim().isEmpty) {
+      Constants.showMessage(context, "Please Enter Equipment title");
+    } else if (selectedCategory.isEmpty) {
+      Constants.showMessage(context, "Please Select Equipment Type");
+    } else if (selectedCategory == "Indoor") {
+      if (price.text.trim().isEmpty) {
+        Constants.showMessage(context, "Please enter 15 Minutes price");
+      } else if (thirtyprice.text.isEmpty) {
+        Constants.showMessage(context, "Please Enter Thirty Minutes Price");
+      } else if (sixtyprice.text.isEmpty) {
+        Constants.showMessage(context, "Please Enter Thirty Minutes Price");
+      } else {
+        result = true;
+      }
+    } else if (selectedCategory == "Outdoor") {
+      if (price.text.trim().isEmpty) {
+        Constants.showMessage(context, "Please Enter Price");
+      } else {
+        result = true;
+      }
+    }
+    return result;
   }
 
   @override

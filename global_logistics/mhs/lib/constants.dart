@@ -197,4 +197,15 @@ class Constants {
   //   var formatter = intl.DateFormat('hh.mm a, dd MMM, yy');
   //   return formatter.format(t);
   // }
+
+  // static void functionTemplate(bool loading, User? user) async {
+  //   if (loading) {
+  //     return;
+  //   }
+  //   user = FirebaseAuth.instance.currentUser;
+  //   if (user == null) {
+  //     return;
+  //   }
+  // await FirebaseFirestore.collection('')
+  // }
 }
