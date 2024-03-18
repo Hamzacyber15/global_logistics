@@ -143,6 +143,9 @@ class _AddEquipmentPageState extends State<AddEquipmentPage> {
               "Add Equipment",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             Card(
               color: AppTheme.primaryColor.withOpacity(0.1),
               child: TextField(

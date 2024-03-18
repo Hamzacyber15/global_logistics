@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
@@ -12,6 +14,22 @@ class OutdoorEquipmentCharges extends StatefulWidget {
 }
 
 class _OutdoorEquipmentChargesState extends State<OutdoorEquipmentCharges> {
+  bool loading = false;
+
+  void updatePrice() async {
+    if (loading) {
+      return;
+    }
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    await FirebaseFirestore.instance
+        .collection('equipmentCharges')
+        .doc()
+        .set({});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(

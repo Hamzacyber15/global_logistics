@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mhs/admin/add_equipment.dart';
 import 'package:mhs/admin/indoor_equipment_charges.dart';
 import 'package:mhs/admin/outdoor_equipment_charges.dart';
 import 'package:mhs/app_theme.dart';
-import 'package:mhs/constants.dart';
 
 class EquipmentCharges extends StatefulWidget {
   const EquipmentCharges({super.key});
@@ -20,6 +20,12 @@ class _EquipmentChargesState extends State<EquipmentCharges> {
     setState(() {
       groupValueCount = i;
     });
+  }
+
+  void navNewEquipment() {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return const AddEquipment();
+    }));
   }
 
   @override
@@ -71,41 +77,22 @@ class _EquipmentChargesState extends State<EquipmentCharges> {
             groupValueCount == 0
                 ? const IndoorEquipmentCharges()
                 : const OutdoorEquipmentCharges(),
-            // for (int i = 0; i < Constants.equipmentType.length; i++)
-            //   Column(
-            //     children: [
-            //       ListTile(
-            //         leading: Image.asset(
-            //           Constants.equipmentType[i].image!,
-            //           height: 80,
-            //           width: 80,
-            //         ),
-            //         title: Text(Constants.equipmentType[i].title),
-            //         subtitle: TextField(
-            //           // onChanged: (value) {
-            //           //   sendData();
-            //           // },
-            //           //controller: ,
-            //           keyboardType: TextInputType.emailAddress,
-            //           decoration: const InputDecoration(
-            //             prefixIcon: Icon(
-            //               Icons.price_change,
-            //               color: Colors.black,
-            //             ),
-            //             contentPadding: EdgeInsets.symmetric(vertical: 5),
-            //             labelText: "Charges",
-            //           ),
-            //           cursorColor: AppTheme.primaryColor,
-            //           textInputAction: TextInputAction.next,
-            //           onEditingComplete: () {
-            //             FocusScope.of(context).nextFocus();
-            //           },
-            //         ),
-            //       ),
-            //       Divider()
-            //     ],
-            //   ),
           ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: navNewEquipment,
+        label: const Text("Add Equipment"),
+        tooltip: 'Add Equipment',
+        elevation: 12,
+        focusElevation: 5,
+        splashColor: AppTheme.greenColor,
+        backgroundColor: AppTheme.primaryColor,
+        hoverColor: AppTheme.orangeColor,
+        hoverElevation: 50,
+        icon: Icon(
+          Icons.add,
+          color: AppTheme.whiteColor,
         ),
       ),
     );

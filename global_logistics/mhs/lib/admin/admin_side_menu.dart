@@ -113,7 +113,7 @@ class _AdminSideMenuState extends State<AdminSideMenu> {
               color: AppTheme.whiteColor,
             ),
             title: Text(
-              'Equipment Charges',
+              'Equipment Details',
               style: TextStyle(
                   fontSize: 16,
                   color: AppTheme.whiteColor,

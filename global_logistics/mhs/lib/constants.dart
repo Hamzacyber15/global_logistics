@@ -28,6 +28,19 @@ class Constants {
     DropDownMenuDataModel("", "Egypt", "country"),
   ];
 
+  static List<DropDownMenuDataModel> orderCategory = [
+    DropDownMenuDataModel(
+      "",
+      "Indoor",
+      "indoor",
+    ),
+    DropDownMenuDataModel(
+      "",
+      "Outdoor",
+      "outdoor",
+    ),
+  ];
+
   static List<DropDownMenuDataModel> indoorEquipmentType = [
     DropDownMenuDataModel("", "Electric ForkLift", "Electric Forklift",
         image: "assets/images/electric_forklift.png"),
