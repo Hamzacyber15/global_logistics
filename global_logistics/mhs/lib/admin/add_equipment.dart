@@ -63,7 +63,7 @@ class _AddEquipmentState extends State<AddEquipment> {
       urls.add(url);
     }
     if (urls.isEmpty) {
-      message("Please attach Front & Back Side of the id card");
+      message("Please attach Equipment Icon");
       return;
     }
     bool check = checkCredentials();
@@ -77,7 +77,10 @@ class _AddEquipmentState extends State<AddEquipment> {
     double thiPrice = double.tryParse(thirtyprice.text.trim()) ?? 0;
     double sPrice = double.tryParse(sixtyprice.text.trim()) ?? 0;
     try {
-      await FirebaseFirestore.instance.collection('equipment').doc().set({
+      await FirebaseFirestore.instance
+          .collection('equipmentCategory')
+          .doc()
+          .set({
         'equipmentTitle': equipmentName.text.trim(),
         'equipmentCategory': selectedCategory,
         'equipmentIcon': urls[0],
@@ -321,7 +324,8 @@ class _AddEquipmentState extends State<AddEquipment> {
               const SizedBox(
                 height: 20,
               ),
-              ElevatedButton(onPressed: () {}, child: const Text("Save"))
+              ElevatedButton(
+                  onPressed: saveEquipment, child: const Text("Save"))
             ],
           ),
         ),

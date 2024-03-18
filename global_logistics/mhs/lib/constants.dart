@@ -165,11 +165,13 @@ class Constants {
     UploadTask? uploadTask;
     if (attachment.file != null) {
       uploadTask = ref.putFile(attachment.file!);
-    } else if (attachment.attachmentType.isNotEmpty) {
-      uploadTask = ref.putFile(attachment.file!);
-      // String url = await (await uploadTask).ref.getDownloadURL();
-      // uploadTask = ref.putData(attachment.file!);
-    } else if (attachment.bytes != null) {
+    }
+    // else if (attachment.attachmentType.isNotEmpty) {
+    //   uploadTask = ref.putFile(attachment.file!);
+    // String url = await (await uploadTask).ref.getDownloadURL();
+    // uploadTask = ref.putData(attachment.file!);
+    //  }
+    else if (attachment.bytes != null) {
       uploadTask = ref.putData(attachment.bytes!);
     }
     url = await (await uploadTask!).ref.getDownloadURL();
