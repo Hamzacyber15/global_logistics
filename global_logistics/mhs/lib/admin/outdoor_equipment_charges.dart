@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
+import 'package:mhs/models/equipment_type_model.dart';
+import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/custom_button.dart';
+import 'package:provider/provider.dart';
 
 class OutdoorEquipmentCharges extends StatefulWidget {
   const OutdoorEquipmentCharges({super.key});
@@ -15,6 +18,17 @@ class OutdoorEquipmentCharges extends StatefulWidget {
 
 class _OutdoorEquipmentChargesState extends State<OutdoorEquipmentCharges> {
   bool loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getIndoorEquipment();
+  }
+
+  void getIndoorEquipment() {
+    Provider.of<StorageProvider>(context, listen: false)
+        .getEquipment("Outdoor");
+  }
 
   void updatePrice() async {
     if (loading) {
@@ -32,18 +46,20 @@ class _OutdoorEquipmentChargesState extends State<OutdoorEquipmentCharges> {
 
   @override
   Widget build(BuildContext context) {
+    List<EquipmentTypeModel> outdoorEquipmentType =
+        Provider.of<StorageProvider>(context).outdoorEquipment;
     return Column(
       children: [
-        for (int i = 0; i < Constants.outDoorEquipmentType.length; i++)
+        for (int i = 0; i < outdoorEquipmentType.length; i++)
           Column(
             children: [
               ListTile(
-                leading: Image.asset(
-                  Constants.outDoorEquipmentType[i].image!,
+                leading: Image.network(
+                  outdoorEquipmentType[i].imageIcon,
                   height: 80,
                   width: 80,
                 ),
-                title: Text(Constants.outDoorEquipmentType[i].title),
+                title: Text(outdoorEquipmentType[i].name),
                 subtitle: TextField(
                   // onChanged: (value) {
                   //   sendData();
@@ -64,6 +80,7 @@ class _OutdoorEquipmentChargesState extends State<OutdoorEquipmentCharges> {
                     FocusScope.of(context).nextFocus();
                   },
                 ),
+                trailing: Icon(Icons.edit),
                 // trailing: SizedBox(
                 //   width: 140,
                 //   height: 50,

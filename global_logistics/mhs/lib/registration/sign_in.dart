@@ -96,12 +96,12 @@ class _SignInState extends State<SignIn> {
       child: Scaffold(
         body: loading
             ? const LoadingWidget()
-            : SizedBox(
-                width: Constants.bigScreen
-                    ? MediaQuery.of(context).size.width / 2
-                    : MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
-                  child: Center(
+            : Center(
+                child: SizedBox(
+                  width: Constants.bigScreen
+                      ? MediaQuery.of(context).size.width / 2
+                      : MediaQuery.of(context).size.width,
+                  child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 20),
@@ -111,13 +111,13 @@ class _SignInState extends State<SignIn> {
                         children: [
                           const SizedBox(height: 20),
                           Container(
-                            height: 300,
+                            height: 250,
                             width: 400,
                             decoration: const BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(
                                       //'assets/images/logo_new.jpg',
-                                      'assets/images/logo_new.jpg'),
+                                      'assets/images/logo_new.png'),
                                   fit: BoxFit.cover),
                             ),
                           ),

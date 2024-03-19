@@ -1,0 +1,16 @@
+{   
+ "version": "0.0.1",
+ "configurations": [{
+        "name": "Global",
+        "request": "launch",
+        "type": "dart",
+        "args": [
+            "--web-hostname",
+            "localhost",
+            "--web-port",
+            "5000",
+            "--web-renderer",
+            "html",
+        ],
+    }
+]}

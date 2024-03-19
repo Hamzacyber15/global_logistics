@@ -4,6 +4,8 @@ import 'package:mhs/admin/add_equipment.dart';
 import 'package:mhs/admin/indoor_equipment_charges.dart';
 import 'package:mhs/admin/outdoor_equipment_charges.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/provider/storage_provider.dart';
+import 'package:provider/provider.dart';
 
 class EquipmentCharges extends StatefulWidget {
   const EquipmentCharges({super.key});
@@ -14,6 +16,16 @@ class EquipmentCharges extends StatefulWidget {
 
 class _EquipmentChargesState extends State<EquipmentCharges> {
   int groupValueCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getIndoorEquipment();
+  }
+
+  void getIndoorEquipment() {
+    Provider.of<StorageProvider>(context, listen: false).getEquipment("Indoor");
+  }
 
   void changePage(Object count) {
     int i = count as int;

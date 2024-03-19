@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/equipment_type_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 
 class StorageProvider with ChangeNotifier {
@@ -36,6 +37,8 @@ class StorageProvider with ChangeNotifier {
       userMobile: "",
       userName: "",
       userAttachment: []);
+  List<EquipmentTypeModel> indoorEquipment = [];
+  List<EquipmentTypeModel> outdoorEquipment = [];
 
   void getColdStorageBlock(String block) {
     selectedBlock = block;
@@ -174,5 +177,35 @@ class StorageProvider with ChangeNotifier {
     } catch (e) {
       debugPrint(e.toString());
     } finally {}
+  }
+
+  void getEquipment(String type) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    try {
+      await FirebaseFirestore.instance
+          .collection('equipmentCategory')
+          .where('equipmentCategory', isEqualTo: type)
+          .where('status', isEqualTo: "active")
+          .get()
+          .then((value) {
+        indoorEquipment.clear();
+        for (var doc in value.docs) {
+          EquipmentTypeModel? em = EquipmentTypeModel.getEquipment(doc);
+          if (em != null) {
+            if (type == "Indoor") {
+              indoorEquipment.add(em);
+            } else {
+              outdoorEquipment.add(em);
+            }
+          }
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
