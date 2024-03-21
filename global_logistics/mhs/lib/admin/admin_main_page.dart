@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mhs/admin/admin_dasboard.dart';
 import 'package:mhs/admin/admin_side_menu.dart';
 import 'package:mhs/admin/equipment_charges.dart';
+import 'package:mhs/admin/packages_main_page.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/employees_screen.dart/employees_main_page.dart';
 import 'package:mhs/equipment_screens.dart/equipment_main_screen.dart';
@@ -25,6 +26,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
       return const EquipmentMainScreens();
     } else if (type == "equipmentCharges") {
       return const EquipmentCharges();
+    } else if (type == "packages") {
+      return const PackagesMainPage();
     }
 
     return Container();

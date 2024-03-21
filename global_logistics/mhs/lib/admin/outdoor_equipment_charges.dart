@@ -80,7 +80,7 @@ class _OutdoorEquipmentChargesState extends State<OutdoorEquipmentCharges> {
                     FocusScope.of(context).nextFocus();
                   },
                 ),
-                trailing: Icon(Icons.edit),
+                trailing: const Icon(Icons.edit),
                 // trailing: SizedBox(
                 //   width: 140,
                 //   height: 50,

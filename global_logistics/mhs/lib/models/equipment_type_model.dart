@@ -28,7 +28,7 @@ class EquipmentTypeModel {
         id: doc.id,
         name: data!['equipmentTitle'] ?? "",
         status: data['status'] ?? "",
-        category: data['category'] ?? "",
+        category: data['equipmentCategory'] ?? "",
         imageIcon: data['equipmentIcon'] ?? "",
         price: double.tryParse(data['price'].toString()) ?? 0,
         thiryMinutePrice:

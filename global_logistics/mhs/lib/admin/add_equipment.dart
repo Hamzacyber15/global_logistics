@@ -7,11 +7,13 @@ import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/models/attachment_model.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/equipment_type_model.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 import 'package:mhs/widgets/picker_widget.dart';
 
 class AddEquipment extends StatefulWidget {
-  const AddEquipment({super.key});
+  final EquipmentTypeModel? et;
+  const AddEquipment({this.et, super.key});
 
   @override
   State<AddEquipment> createState() => _AddEquipmentState();
@@ -26,6 +28,28 @@ class _AddEquipmentState extends State<AddEquipment> {
   DropDownMenuDataModel equipment = Constants.equipmentType[0];
   List<AttachmentModel> attachments = [];
   String selectedCategory = "";
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.et != null) {
+      String p = widget.et!.price.toString();
+      equipmentName.text = widget.et!.name;
+      price.text = p;
+      if (widget.et!.category == "Indoor") {
+        selectedCategory = "Indoor";
+        String t = "";
+        String s = "";
+        t = widget.et!.thiryMinutePrice.toString();
+        s = widget.et!.sixtyMintesPrice.toString();
+        thirtyprice.text = t;
+        sixtyprice.text = s;
+      } else {
+        selectedCategory = "Outdoor";
+      }
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {

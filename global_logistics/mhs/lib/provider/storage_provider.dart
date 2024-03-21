@@ -5,6 +5,7 @@ import 'package:mhs/constants.dart';
 import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/equipment_type_model.dart';
+import 'package:mhs/models/package_model.dart';
 import 'package:mhs/models/storage_area_model.dart';
 
 class StorageProvider with ChangeNotifier {
@@ -18,6 +19,9 @@ class StorageProvider with ChangeNotifier {
   List<StorageAreaModel> potatoList = [];
   List<DropDownMenuDataModel> sellFromTruckArea = [];
   List<StorageAreaModel> sellFromTruckList = [];
+  List<DropDownMenuDataModel> indoorEquipmentDropDown = [];
+  List<DropDownMenuDataModel> outdoorEquipmentDropDown = [];
+  List<PackageModel> packages = [];
   String selectedBlock = "";
   List<DropDownMenuDataModel> businessAreaList = [];
   BusinessProfileModel business = BusinessProfileModel(
@@ -191,19 +195,56 @@ class StorageProvider with ChangeNotifier {
           .where('status', isEqualTo: "active")
           .get()
           .then((value) {
+        if (type == "Indoor") {
+          indoorEquipment.clear();
+        } else {
+          outdoorEquipment.clear();
+        }
         indoorEquipment.clear();
+        outdoorEquipment.clear();
         for (var doc in value.docs) {
           EquipmentTypeModel? em = EquipmentTypeModel.getEquipment(doc);
           if (em != null) {
             if (type == "Indoor") {
               indoorEquipment.add(em);
+              indoorEquipmentDropDown.add(DropDownMenuDataModel(
+                  em.id, em.name, em.name,
+                  image: em.imageIcon));
             } else {
               outdoorEquipment.add(em);
+              outdoorEquipmentDropDown.add(DropDownMenuDataModel(
+                  em.id, em.name, em.name,
+                  image: em.imageIcon));
             }
           }
         }
       });
       notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void getPackages() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    try {
+      await FirebaseFirestore.instance
+          .collection('packages')
+          .where('status', isEqualTo: "active")
+          .get()
+          .then((value) {
+        packages.clear();
+        for (var doc in value.docs) {
+          PackageModel? pm = PackageModel.getPackage(doc);
+          if (pm != null) {
+            packages.add(pm);
+          }
+        }
+        notifyListeners();
+      });
     } catch (e) {
       debugPrint(e.toString());
     }

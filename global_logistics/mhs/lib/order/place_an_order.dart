@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
+import 'package:mhs/models/package_model.dart';
 import 'package:mhs/order/order_now.dart';
 import 'package:mhs/order/schedule_order.dart';
+import 'package:mhs/provider/storage_provider.dart';
+import 'package:provider/provider.dart';
 
 class PlaceAnOrder extends StatefulWidget {
   const PlaceAnOrder({super.key});
@@ -13,6 +16,19 @@ class PlaceAnOrder extends StatefulWidget {
 
 class _PlaceAnOrderState extends State<PlaceAnOrder> {
   int groupValueCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    getPackages();
+  }
+
+  void getPackages() {
+    Provider.of<StorageProvider>(context, listen: false).getPackages();
+    Provider.of<StorageProvider>(context, listen: false).getEquipment("Indoor");
+    Provider.of<StorageProvider>(context, listen: false)
+        .getEquipment("Outdoor");
+  }
 
   void changePage(Object count) {
     int i = count as int;

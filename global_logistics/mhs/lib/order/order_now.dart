@@ -7,10 +7,13 @@ import 'package:mhs/models/business/business_area_model.dart';
 import 'package:mhs/models/business/business_profile.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
 import 'package:mhs/models/order_model.dart';
+import 'package:mhs/models/package_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
+import 'package:mhs/order/package_info.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/business_area_list.dart';
 import 'package:mhs/widgets/check_box_container.dart';
+import 'package:mhs/widgets/checkbox_listtile_container.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +26,10 @@ class OrderNow extends StatefulWidget {
 
 class _OrderNowState extends State<OrderNow> {
   bool loading = false;
-  List<bool> orderCategoryBool = [true, false];
-  List<String> orderCategory = ["Indoor Handling", "Outdoor"];
+  List<bool> orderCategoryBool = [false, false];
+  bool packageTypeBool = false;
+  List<String> orderCategory = ["Indoor Handling", "Outdoor Handling"];
+  String packagetype = "Other Handling Package";
   BusinessAreaModel businessArea =
       BusinessAreaModel(title: "", value: "", id: "");
   OrderModel order = OrderModel(
@@ -60,12 +65,17 @@ class _OrderNowState extends State<OrderNow> {
   //BusinessProfileModel businessProfile =
 
   void changeStatus(String type, int i) {
-    for (int j = 0; j < orderCategoryBool.length; j++) {
-      if (j == i) {
-        orderCategoryBool[j] = true;
-      } else {
-        orderCategoryBool[j] = false;
+    if (type == "type") {
+      for (int j = 0; j < orderCategoryBool.length; j++) {
+        if (j == i) {
+          orderCategoryBool[j] = true;
+        } else {
+          orderCategoryBool[j] = false;
+        }
       }
+    } else {
+      packageTypeBool = !packageTypeBool;
+      orderCategoryBool = List.filled(orderCategoryBool.length, false);
     }
 
     setState(() {});
@@ -215,34 +225,110 @@ class _OrderNowState extends State<OrderNow> {
   //   delivery: delivery, equipment: equipment, pickUp: pickUp, indoorLocation: indoorLocation, indoorLocationId: indoorLocationId, outdoorLocation: outdoorLocation, outdoorBuilding: outdoorBuilding, outdoorlocationId: outdoorlocationId, block: block, timestamp: timestamp)
   // }
 
-  void navOrder() {
-    // Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-    //   return  ConfirmOrderDetails();
-    // }));
+  void navOrder(PackageModel p) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return PackageInfo(pm: p);
+    }));
   }
+
+  int selectedOption = 1;
 
   @override
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
         Provider.of<StorageProvider>(context).business;
-    // final List<DropDownMenuDataModel> businessAreaList =
-    //     Provider.of<StorageProvider>(context).businessAreaList;
+    List<PackageModel> package = Provider.of<StorageProvider>(context).packages;
+    List<DropDownMenuDataModel> indoorEquipment =
+        Provider.of<StorageProvider>(context).indoorEquipmentDropDown;
+    List<DropDownMenuDataModel> outdoorEquipment =
+        Provider.of<StorageProvider>(context).outdoorEquipmentDropDown;
     return Column(
       children: [
+        if (!packageTypeBool)
+          Row(
+            children: [
+              for (int i = 0; i < orderCategory.length; i++)
+                Expanded(
+                  child: Card(
+                    child: CheckBoxContainer(
+                        iconImage: orderCategoryImage[i],
+                        check: orderCategoryBool[i],
+                        tapped: () => changeStatus("type", i),
+                        title: orderCategory[i]),
+                  ),
+                ),
+            ],
+          ),
         Row(
           children: [
-            for (int i = 0; i < orderCategory.length; i++)
-              Expanded(
-                child: Card(
-                  child: CheckBoxContainer(
-                      iconImage: orderCategoryImage[i],
-                      check: orderCategoryBool[i],
-                      tapped: () => changeStatus("type", i),
-                      title: orderCategory[i]),
-                ),
+            Expanded(
+              child: Card(
+                child: CheckBoxContainer(
+                    iconImage: orderCategoryImage[0],
+                    check: packageTypeBool,
+                    tapped: () => changeStatus("packagetype", 0),
+                    title: packagetype),
               ),
+            ),
           ],
         ),
+        if (packageTypeBool)
+          for (int i = 0; i < package.length; i++)
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: ListTile(
+                  leading: Transform.scale(
+                    scale: 1.3,
+                    child: Radio<int>(
+                      value: i,
+                      groupValue: selectedOption,
+                      activeColor: AppTheme.greenColor,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedOption = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  title: Text(
+                    package[i].packageTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(package[i].equipment),
+                      Text("${"Price + Vat"} ${package[i].price.toString()} "),
+                      Text(package[i].orderCategory),
+                    ],
+                  ),
+                  trailing: CircleAvatar(
+                    backgroundColor: AppTheme.greyColor,
+                    child: IconButton(
+                        onPressed: () => navOrder(package[i]),
+                        icon: const Icon(Icons.chevron_right)),
+                  ),
+                ),
+              ),
+            ),
+        // Card(
+        //   child: CheckboxListTile(
+        //     value: false,
+        //     onChanged: (value) {},
+        //     title: Text(package[i].packageTitle),
+        //     subtitle: Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         Text(package[i].equipment),
+        //         Text("${"Price + Vat"} ${package[i].price.toString()} "),
+        //       ],
+        //     ),
+        //   ),
+        // ),
         if (orderCategoryBool[0])
           Card(
             color: AppTheme.primaryColor.withOpacity(0.1),
@@ -250,7 +336,7 @@ class _OrderNowState extends State<OrderNow> {
                 getValues,
                 "Indoor Equipment",
                 //icon: indoorEquipmentIcons[0],
-                Constants.indoorEquipmentType,
+                indoorEquipment,
                 a,
                 "equipment"),
           ),
@@ -261,7 +347,7 @@ class _OrderNowState extends State<OrderNow> {
                 getValues,
                 "OutDoor Equipment",
                 // icon: outdoorEquipmentIcons[0],
-                Constants.outDoorEquipmentType,
+                outdoorEquipment,
                 a,
                 "equipment"),
           ),
@@ -306,6 +392,15 @@ class _OrderNowState extends State<OrderNow> {
                         if (orderCategoryBool[0])
                           Text(
                             "Select Indoor Handling Location",
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.blackColor),
+                          ),
+                        if (packageTypeBool)
+                          Text(
+                            "Select Package Handling Location",
+                            //"Select Indoor Handling Location",
                             style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,

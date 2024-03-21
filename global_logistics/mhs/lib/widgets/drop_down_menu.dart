@@ -43,7 +43,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
                 width: 25,
               ),
             if (e.image != null)
-              Image.asset(
+              Image.network(
                 e.image!,
                 height: 35,
                 width: 35,
@@ -103,7 +103,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
                     width: 25,
                   )
                 : selected.image != null
-                    ? Image.asset(
+                    ? Image.network(
                         selected.image!,
                         height: 35,
                         width: 35,

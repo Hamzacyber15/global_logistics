@@ -25,6 +25,7 @@ class CheckBoxContainer extends StatelessWidget {
       padding: const EdgeInsets.all(2.0),
       child: Container(
         decoration: BoxDecoration(
+          color: AppTheme.whiteColor,
           borderRadius: BorderRadius.circular(10),
         ),
         child: CheckboxListTile(

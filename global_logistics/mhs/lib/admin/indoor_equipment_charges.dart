@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mhs/admin/add_equipment.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/models/equipment_type_model.dart';
 import 'package:mhs/provider/storage_provider.dart';
+import 'package:mhs/widgets/pricing_list.dart';
 import 'package:provider/provider.dart';
 
 class IndoorEquipmentCharges extends StatefulWidget {
@@ -27,6 +29,12 @@ class _IndoorEquipmentChargesState extends State<IndoorEquipmentCharges> {
     Provider.of<StorageProvider>(context, listen: false).getEquipment("Indoor");
   }
 
+  void navAddEquipment(EquipmentTypeModel e) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return AddEquipment(et: e);
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     List<EquipmentTypeModel> indoorEquipmentType =
@@ -41,35 +49,23 @@ class _IndoorEquipmentChargesState extends State<IndoorEquipmentCharges> {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.network(
                     indoorEquipmentType[i].imageIcon,
-                    height: 80,
-                    width: 80,
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.fill,
                   ),
                 ),
                 title: Text(
                   indoorEquipmentType[i].name,
-                  style: TextStyle(color: AppTheme.blackColor),
+                  style: TextStyle(
+                      color: AppTheme.blackColor, fontWeight: FontWeight.bold),
                 ),
-                // subtitle:
-                // TextField(
-                //   // onChanged: (value) {
-                //   //   sendData();
-                //   // },
-                //   //controller: ,
-                //   keyboardType: TextInputType.emailAddress,
-                //   decoration: InputDecoration(
-                //       prefixIcon: const Icon(
-                //         Icons.price_change,
-                //         color: Colors.black,
-                //       ),
-                //       contentPadding: const EdgeInsets.symmetric(vertical: 5),
-                //       labelText: indoorEquipmentType[i].name //"Charges",
-                //       ),
-                //   cursorColor: AppTheme.primaryColor,
-                //   textInputAction: TextInputAction.next,
-                //   onEditingComplete: () {
-                //     FocusScope.of(context).nextFocus();
-                //   },
-                // ),
+                subtitle: PricingList(em: indoorEquipmentType[i]),
+                trailing: CircleAvatar(
+                  backgroundColor: AppTheme.whiteColor,
+                  child: IconButton(
+                      onPressed: () => navAddEquipment(indoorEquipmentType[i]),
+                      icon: const Icon(Icons.edit)),
+                ),
               ),
               const Divider()
             ],
