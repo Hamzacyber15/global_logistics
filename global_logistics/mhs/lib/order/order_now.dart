@@ -30,6 +30,7 @@ class _OrderNowState extends State<OrderNow> {
   bool packageTypeBool = false;
   List<String> orderCategory = ["Indoor Handling", "Outdoor Handling"];
   String packagetype = "Other Handling Package";
+  int selectedOption = 0;
   BusinessAreaModel businessArea =
       BusinessAreaModel(title: "", value: "", id: "");
   OrderModel order = OrderModel(
@@ -231,8 +232,6 @@ class _OrderNowState extends State<OrderNow> {
     }));
   }
 
-  int selectedOption = 1;
-
   @override
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
@@ -389,14 +388,6 @@ class _OrderNowState extends State<OrderNow> {
                                 fontWeight: FontWeight.bold,
                                 color: AppTheme.blackColor),
                           ),
-                        if (orderCategoryBool[0])
-                          Text(
-                            "Select Indoor Handling Location",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.blackColor),
-                          ),
                         if (packageTypeBool)
                           Text(
                             "Select Package Handling Location",
@@ -425,9 +416,7 @@ class _OrderNowState extends State<OrderNow> {
                 indent: 10,
                 //color: AppTheme.blackColor,
               ),
-              const SizedBox(
-                height: 5,
-              ),
+
               // Card(
               //   color: AppTheme.primaryColor.withOpacity(0.1),
               //   child: DropDownMenu(
@@ -448,69 +437,60 @@ class _OrderNowState extends State<OrderNow> {
         const SizedBox(
           height: 10,
         ),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: AppTheme.primaryColor),
-          child: Row(
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.pallet,
-                    color: AppTheme.whiteColor,
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Select Unloading Location",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.whiteColor),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        if (orderCategoryBool[0] && indoorList.isNotEmpty)
-          Card(
-            color: AppTheme.primaryColor.withOpacity(0.1),
-            child: DropDownMenu(
-                getValues,
-                "Select Building",
-                //  const Icon(Icons.build),
-                indoorList,
-                a,
-                "indoorLocation"),
-          ),
-        if (orderCategoryBool[1])
-          Card(
-            color: AppTheme.primaryColor.withOpacity(0.1),
-            child: DropDownMenu(
-                getValues,
-                "Select Building",
-                //  const Icon(Icons.build),
-                Constants.businessArea,
-                a,
-                "outdoorBuilding"),
-          ),
-        if (orderCategoryBool[1] && indoorList.isNotEmpty)
-          Card(
-            color: AppTheme.primaryColor.withOpacity(0.1),
-            child: DropDownMenu(
-                getValues,
-                "Select Building",
-                //  const Icon(Icons.build),
-                indoorList,
-                a,
-                "outdoorLocation"),
+        if (orderCategoryBool[1] ||
+            package[selectedOption].orderCategory == "Outdoor")
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: AppTheme.whiteColor),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.pallet,
+                      color: AppTheme.blackColor,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Select Unloading Location",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.blackColor),
+                    ),
+                  ],
+                ),
+                const Divider(
+                  endIndent: 2,
+                  indent: 2,
+                  //color: AppTheme.blackColor,
+                ),
+                Card(
+                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  child: DropDownMenu(
+                      getValues,
+                      "Select Building",
+                      //  const Icon(Icons.build),
+                      Constants.businessArea,
+                      a,
+                      "outdoorBuilding"),
+                ),
+                Card(
+                  color: AppTheme.primaryColor.withOpacity(0.1),
+                  child: DropDownMenu(
+                      getValues,
+                      "Select Warehouse",
+                      //  const Icon(Icons.build),
+                      indoorList,
+                      a,
+                      "outdoorLocation"),
+                ),
+              ],
+            ),
           ),
         const SizedBox(
           height: 10,

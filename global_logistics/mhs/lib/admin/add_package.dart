@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
+import 'package:mhs/models/package_model.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/check_box_container.dart';
 import 'package:mhs/widgets/drop_down_menu.dart';
 import 'package:provider/provider.dart';
 
 class AddPackage extends StatefulWidget {
-  const AddPackage({super.key});
+  final PackageModel? pm;
+  const AddPackage({this.pm, super.key});
 
   @override
   State<AddPackage> createState() => _AddPackageState();
@@ -37,6 +37,23 @@ class _AddPackageState extends State<AddPackage> {
   @override
   void initState() {
     super.initState();
+    if (widget.pm != null) {
+      titleController.text = widget.pm!.packageTitle;
+      arabicTitleController.text = widget.pm!.arabicPackageTitle;
+      descriptionController.text = widget.pm!.description;
+      arabicDescriptionController.text = widget.pm!.arabicDescription;
+      numberofLabourController.text = widget.pm!.labour.toString();
+      priceController.text = widget.pm!.price.toString();
+      containerSizeController.text = widget.pm!.containerSize;
+      estimatedDelivery.text = widget.pm!.estimatedDelivery;
+      setState(() {
+        selectedCategory = widget.pm!.orderCategory;
+        if (widget.pm!.labour != 0) {
+          labour = true;
+        }
+      });
+    }
+
     getEquipment();
   }
 
@@ -154,7 +171,7 @@ class _AddPackageState extends State<AddPackage> {
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width / 2,
-            child: Column(
+            child: ListView(
               children: [
                 Card(
                   color: AppTheme.whiteColor,
@@ -373,7 +390,8 @@ class _AddPackageState extends State<AddPackage> {
                 const SizedBox(
                   height: 20,
                 ),
-                ElevatedButton(onPressed: save, child: const Text("Save"))
+                if (widget.pm == null)
+                  ElevatedButton(onPressed: save, child: const Text("Save"))
               ],
             ),
           ),
