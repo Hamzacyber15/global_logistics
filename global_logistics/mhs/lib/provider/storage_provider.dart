@@ -21,6 +21,10 @@ class StorageProvider with ChangeNotifier {
   List<StorageAreaModel> sellFromTruckList = [];
   List<DropDownMenuDataModel> indoorEquipmentDropDown = [];
   List<DropDownMenuDataModel> outdoorEquipmentDropDown = [];
+  List<StorageAreaModel> parkingAreaListA = [];
+  List<DropDownMenuDataModel> parkingAreaA = [];
+  List<StorageAreaModel> parkingAreaListC = [];
+  List<DropDownMenuDataModel> parkingAreaC = [];
   List<PackageModel> packages = [];
   String selectedBlock = "";
   List<DropDownMenuDataModel> businessAreaList = [];
@@ -174,6 +178,43 @@ class StorageProvider with ChangeNotifier {
             potatoList.add(sm);
             potatoArea
                 .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+          }
+        }
+      });
+      notifyListeners();
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+  void getParkingArea(String block) async {
+    if (block == "a") {
+      parkingAreaListA.clear();
+      parkingAreaA.clear();
+    } else {
+      parkingAreaListC.clear();
+      parkingAreaC.clear();
+    }
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('parking')
+          .where('block', isEqualTo: block)
+          .where('status', isEqualTo: "active")
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          StorageAreaModel? sm = StorageAreaModel.getStorageList(doc);
+          if (sm != null) {
+            if (block == "a") {
+              parkingAreaListA.add(sm);
+              parkingAreaA
+                  .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+            } else {
+              parkingAreaListC.add(sm);
+              parkingAreaC
+                  .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+            }
           }
         }
       });

@@ -3,7 +3,6 @@ import 'package:mhs/app_theme.dart';
 import 'package:mhs/constants.dart';
 import 'package:mhs/models/check_box_model.dart';
 import 'package:mhs/models/drop_down_menu_model.dart';
-import 'package:mhs/widgets/drop_down_menu.dart';
 
 class CheckBoxListTileContainer extends StatefulWidget {
   final CheckBoxModel cm;

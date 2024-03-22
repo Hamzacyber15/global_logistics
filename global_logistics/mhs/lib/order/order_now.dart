@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +133,7 @@ class _OrderNowState extends State<OrderNow> {
   void getValues(String type, String value, String id) {
     if (type == "outdoorBuilding") {
       order.outdoorBuilding = value;
-      //indoorList.clear();
+      indoorList.clear();
       if (value == "Cold Storage Area") {
         indoorList = Provider.of<StorageProvider>(context, listen: false)
             .coldStorageArea;
@@ -144,6 +146,12 @@ class _OrderNowState extends State<OrderNow> {
       } else if (value == "Potato Area") {
         indoorList =
             Provider.of<StorageProvider>(context, listen: false).potatoArea;
+      } else if (value == "Parking Area (C)") {
+        indoorList =
+            Provider.of<StorageProvider>(context, listen: false).parkingAreaC;
+      } else if (value == "Parking Area (A)") {
+        indoorList =
+            Provider.of<StorageProvider>(context, listen: false).parkingAreaA;
       }
     } else if (type == "equipment") {
       order.equipment = value;

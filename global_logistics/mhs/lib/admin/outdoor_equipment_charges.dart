@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mhs/app_theme.dart';
-import 'package:mhs/constants.dart';
 import 'package:mhs/models/equipment_type_model.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/custom_button.dart';
