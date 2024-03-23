@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -446,7 +444,8 @@ class _OrderNowState extends State<OrderNow> {
           height: 10,
         ),
         if (orderCategoryBool[1] ||
-            package[selectedOption].orderCategory == "Outdoor")
+            package[selectedOption].orderCategory.isNotEmpty &&
+                package[selectedOption].orderCategory == "Outdoor")
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
