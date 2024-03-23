@@ -195,7 +195,6 @@ class StorageProvider with ChangeNotifier {
       parkingAreaListC.clear();
       parkingAreaC.clear();
     }
-
     try {
       await FirebaseFirestore.instance
           .collection('parking')
@@ -204,17 +203,19 @@ class StorageProvider with ChangeNotifier {
           .get()
           .then((value) {
         for (var doc in value.docs) {
-          StorageAreaModel? sm = StorageAreaModel.getStorageList(doc);
-          if (sm != null) {
-            if (block == "a") {
-              parkingAreaListA.add(sm);
-              parkingAreaA
-                  .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
-            } else {
-              parkingAreaListC.add(sm);
-              parkingAreaC
-                  .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
-            }
+          StorageAreaModel sm = StorageAreaModel(
+              id: doc.id,
+              block: doc.data()['block'] ?? "",
+              storage: doc.data()['parking'] ?? "",
+              status: doc.data()['status'] ?? "");
+          if (block == "a") {
+            parkingAreaListA.add(sm);
+            parkingAreaA
+                .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
+          } else {
+            parkingAreaListC.add(sm);
+            parkingAreaC
+                .add(DropDownMenuDataModel(sm.id, sm.storage, sm.storage));
           }
         }
       });

@@ -30,7 +30,13 @@ class _OrderNowState extends State<OrderNow> {
   bool packageTypeBool = false;
   List<String> orderCategory = ["Indoor Handling", "Outdoor Handling"];
   String packagetype = "Other Handling Package";
+  List<bool> tractorOptionBool = [false, false];
+  List<String> tractorOption = [
+    "Collect Full TY/Trailer",
+    "Collect Empty Ty/Trailer"
+  ];
   int selectedOption = 0;
+  List<PackageModel> package = [];
   BusinessAreaModel businessArea =
       BusinessAreaModel(title: "", value: "", id: "");
   OrderModel order = OrderModel(
@@ -74,9 +80,17 @@ class _OrderNowState extends State<OrderNow> {
           orderCategoryBool[j] = false;
         }
       }
-    } else {
+    } else if (type == "packagetype") {
       packageTypeBool = !packageTypeBool;
       orderCategoryBool = List.filled(orderCategoryBool.length, false);
+    } else if (type == "tractor") {
+      for (int z = 0; z < tractorOptionBool.length; z++) {
+        if (z == i) {
+          tractorOptionBool[z] = true;
+        } else {
+          tractorOptionBool[z] = false;
+        }
+      }
     }
 
     setState(() {});
@@ -242,7 +256,7 @@ class _OrderNowState extends State<OrderNow> {
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
         Provider.of<StorageProvider>(context).business;
-    List<PackageModel> package = Provider.of<StorageProvider>(context).packages;
+    package = Provider.of<StorageProvider>(context).packages;
     List<DropDownMenuDataModel> indoorEquipment =
         Provider.of<StorageProvider>(context).indoorEquipmentDropDown;
     List<DropDownMenuDataModel> outdoorEquipment =
@@ -498,6 +512,19 @@ class _OrderNowState extends State<OrderNow> {
                 ),
               ],
             ),
+          ),
+        if (order.equipment == "Tractor")
+          Column(
+            children: [
+              for (int i = 0; i < tractorOption.length; i++)
+                Card(
+                  child: CheckBoxContainer(
+                      iconImage: orderCategoryImage[i],
+                      check: tractorOptionBool[i],
+                      tapped: () => changeStatus("tractor", i),
+                      title: tractorOption[i]),
+                ),
+            ],
           ),
         const SizedBox(
           height: 10,
