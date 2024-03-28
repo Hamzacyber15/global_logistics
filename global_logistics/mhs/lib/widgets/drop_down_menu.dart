@@ -22,16 +22,27 @@ class DropDownMenu extends StatefulWidget {
 class _DropDownMenuState extends State<DropDownMenu> {
   bool isSelected = false;
   late DropDownMenuDataModel selected;
+  List<DropDownMenuDataModel> list = [];
 
   @override
   void initState() {
     selected = widget.initialValue;
+    list = widget.list;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant DropDownMenu oldWidget) {
+    if (oldWidget.list != widget.list) {
+      list = widget.list;
+      selected = widget.initialValue;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   List<PopupMenuEntry<DropDownMenuDataModel>> itemBuilder(
       BuildContext context) {
-    return widget.list.map((e) {
+    return list.map((e) {
       return PopupMenuItem(
         value: e,
         child: Row(

@@ -25,10 +25,13 @@ class OrderNow extends StatefulWidget {
 }
 
 class _OrderNowState extends State<OrderNow> {
+  TextEditingController tyController = TextEditingController();
   bool loading = false;
   List<bool> orderCategoryBool = [false, false];
   bool packageTypeBool = false;
   List<String> orderCategory = ["Indoor Handling", "Outdoor Handling"];
+  List<String> outdoorHandlingOption = ["Warehouse", "parking"];
+  List<bool> outdoorHandlingOptionBool = [false, false];
   String packagetype = "Other Handling Package";
   List<bool> tractorOptionBool = [false, false];
   List<String> tractorOption = [
@@ -51,18 +54,7 @@ class _OrderNowState extends State<OrderNow> {
       outdoorlocationId: "",
       block: "",
       timestamp: Timestamp.now());
-  // String selectedBuildingCategory = "";
-  // String selectedEquipment = "";
-  // String indoorLocation = "";
-  // String indoorLocationId = "";
-  // String outdoorBuilding = "";
-  // String outdoorLocation = "";
-  // String outdoorLocationId = "";
-  // String deliveryType = "";
   DropDownMenuDataModel a = DropDownMenuDataModel("", "A-1", "A-1");
-  DropDownMenuDataModel d = DropDownMenuDataModel("", "A-1", "A-1");
-  DropDownMenuDataModel o = DropDownMenuDataModel("", "A-1", "A-1");
-  DropDownMenuDataModel p = DropDownMenuDataModel("", "A-1", "A-1");
   List<DropDownMenuDataModel> indoorList = [];
   List<String> orderCategoryImage = [
     'assets/images/indoor.png',
@@ -70,6 +62,12 @@ class _OrderNowState extends State<OrderNow> {
   ];
 
   //BusinessProfileModel businessProfile =
+
+  @override
+  void dispose() {
+    tyController.dispose();
+    super.dispose();
+  }
 
   void changeStatus(String type, int i) {
     if (type == "type") {
@@ -89,6 +87,14 @@ class _OrderNowState extends State<OrderNow> {
           tractorOptionBool[z] = true;
         } else {
           tractorOptionBool[z] = false;
+        }
+      }
+    } else if (type == "outdoorHandling") {
+      for (int y = 0; y < outdoorHandlingOptionBool.length; y++) {
+        if (y == i) {
+          outdoorHandlingOptionBool[y] = true;
+        } else {
+          outdoorHandlingOptionBool[y] = false;
         }
       }
     }
@@ -178,6 +184,7 @@ class _OrderNowState extends State<OrderNow> {
       order.outdoorLocation == value;
       order.outdoorlocationId == id;
     }
+    debugPrint(indoorList.length.toString());
     setState(() {});
     //  getColdStorage();
   }
@@ -334,20 +341,6 @@ class _OrderNowState extends State<OrderNow> {
                 ),
               ),
             ),
-        // Card(
-        //   child: CheckboxListTile(
-        //     value: false,
-        //     onChanged: (value) {},
-        //     title: Text(package[i].packageTitle),
-        //     subtitle: Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         Text(package[i].equipment),
-        //         Text("${"Price + Vat"} ${package[i].price.toString()} "),
-        //       ],
-        //     ),
-        //   ),
-        // ),
         if (orderCategoryBool[0])
           Card(
             color: AppTheme.primaryColor.withOpacity(0.1),
@@ -364,102 +357,172 @@ class _OrderNowState extends State<OrderNow> {
             color: AppTheme.primaryColor.withOpacity(0.1),
             child: DropDownMenu(
                 getValues,
-                "OutDoor Equipment",
+                "Outdoor Equipment",
                 // icon: outdoorEquipmentIcons[0],
                 outdoorEquipment,
                 a,
                 "equipment"),
           ),
-        const SizedBox(
-          height: 20,
-        ),
-        // Text(
-        //   "Select Indoor Handling Location",
-        //   style: TextStyle(
-        //       fontSize: 16,
-        //       fontWeight: FontWeight.bold,
-        //       color: AppTheme.blackColor),
-        // ),
-        Card(
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.pallet,
-                          color: AppTheme.blackColor,
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        if (orderCategoryBool[1])
-                          Text(
-                            "Select Pick Up Location",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.blackColor),
-                          ),
-                        if (packageTypeBool)
-                          Text(
-                            "Select Package Handling Location",
-                            //"Select Indoor Handling Location",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.blackColor),
-                          ),
-                      ],
-                    ),
-
-                    // const SizedBox(
-                    //   width: 20,
-                    // ),
-                    if (businessArea.id.isNotEmpty)
-                      Icon(
-                        Icons.check_box,
-                        color: AppTheme.whiteColor,
-                      ),
-                  ],
-                ),
-              ),
-              const Divider(
-                endIndent: 10,
-                indent: 10,
-                //color: AppTheme.blackColor,
-              ),
-
-              // Card(
-              //   color: AppTheme.primaryColor.withOpacity(0.1),
-              //   child: DropDownMenu(
-              //       getValues,
-              //       "Outdoor Equipment",
-              //       // icon: outdoorEquipmentIcons[0],
-              //       businessAreaList,
-              //       storage,
-              //       "businessAreaList"),
-              // ),
-              BusinessAreaList(
-                bm: business.businessAreas,
-                tapped: getData,
-              ),
-            ],
+        if (order.equipment == "Tractor")
+          Card(
+            child: Column(
+              children: [
+                for (int i = 0; i < tractorOption.length; i++)
+                  CheckBoxContainer(
+                      iconImage: orderCategoryImage[i],
+                      check: tractorOptionBool[i],
+                      tapped: () => changeStatus("tractor", i),
+                      title: tractorOption[i]),
+              ],
+            ),
           ),
-        ),
+        if (order.equipment == "Tractor")
+          Card(
+            color: AppTheme.whiteColor,
+            child: TextField(
+              controller: tyController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(
+                  Icons.numbers,
+                  color: Colors.black,
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 5),
+                labelText: "Ty/Trailer Number",
+              ),
+              cursorColor: AppTheme.primaryColor,
+              textInputAction: TextInputAction.next,
+              onEditingComplete: () {
+                FocusScope.of(context).nextFocus();
+              },
+            ),
+          ),
         const SizedBox(
           height: 10,
         ),
-        if (orderCategoryBool[1] ||
-            package[selectedOption].orderCategory.isNotEmpty &&
-                package[selectedOption].orderCategory == "Outdoor")
+        if (package.isNotEmpty &&
+            package[selectedOption].orderCategory == "Outdoor" &&
+            packageTypeBool)
+          Card(
+            child: Column(
+              children: [
+                for (int i = 0; i < outdoorHandlingOption.length; i++)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: CheckBoxContainer(
+                        iconImage: orderCategoryImage[i],
+                        check: outdoorHandlingOptionBool[i],
+                        tapped: () => changeStatus("outdoorHandling", i),
+                        title: outdoorHandlingOption[i]),
+                  ),
+              ],
+            ),
+          ),
+        const SizedBox(
+          height: 10,
+        ),
+        if (!packageTypeBool || packageTypeBool && outdoorHandlingOptionBool[0])
+          Card(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.pallet,
+                            color: AppTheme.blackColor,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          tractorOptionBool[0] && order.equipment == "Tractor"
+                              ? Text(
+                                  "Select TY/Trailer Delivery Location",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppTheme.blackColor),
+                                )
+                              : tractorOptionBool[1] &&
+                                      order.equipment == "Tractor"
+                                  ? Text(
+                                      "Select TY/Trailer Collect Location",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppTheme.blackColor),
+                                    )
+                                  : orderCategoryBool[1] &&
+                                          order.equipment != "Tractor"
+                                      ? Text(
+                                          "Select Pick Up Location",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppTheme.blackColor),
+                                        )
+                                      : packageTypeBool &&
+                                              order.equipment != "Tractor"
+                                          ? Text(
+                                              "Select Package Handling Location",
+                                              //"Select Indoor Handling Location",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppTheme.blackColor),
+                                            )
+                                          : orderCategoryBool[0]
+                                              ? Text(
+                                                  "Select Indoor Handling Location",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          AppTheme.blackColor),
+                                                )
+                                              : Text(
+                                                  "Select Your Warehouse",
+                                                  //"Select Indoor Handling Location",
+                                                  style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          AppTheme.blackColor),
+                                                ),
+                        ],
+                      ),
+                      if (businessArea.id.isNotEmpty)
+                        Icon(
+                          Icons.check_box,
+                          color: AppTheme.whiteColor,
+                        ),
+                    ],
+                  ),
+                ),
+                const Divider(
+                  endIndent: 10,
+                  indent: 10,
+                ),
+                BusinessAreaList(
+                  bm: business.businessAreas,
+                  tapped: getData,
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(
+          height: 10,
+        ),
+        if (orderCategoryBool[1])
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
@@ -507,24 +570,13 @@ class _OrderNowState extends State<OrderNow> {
                       "Select Warehouse",
                       //  const Icon(Icons.build),
                       indoorList,
-                      a,
+                      indoorList.isNotEmpty
+                          ? indoorList.first
+                          : DropDownMenuDataModel("", "", ""),
                       "outdoorLocation"),
                 ),
               ],
             ),
-          ),
-        if (order.equipment == "Tractor")
-          Column(
-            children: [
-              for (int i = 0; i < tractorOption.length; i++)
-                Card(
-                  child: CheckBoxContainer(
-                      iconImage: orderCategoryImage[i],
-                      check: tractorOptionBool[i],
-                      tapped: () => changeStatus("tractor", i),
-                      title: tractorOption[i]),
-                ),
-            ],
           ),
         const SizedBox(
           height: 10,

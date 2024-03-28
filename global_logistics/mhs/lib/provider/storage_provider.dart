@@ -165,7 +165,8 @@ class StorageProvider with ChangeNotifier {
   }
 
   void getPotatoArea() async {
-    coldStorageArea.clear();
+    potatoList.clear();
+    potatoArea.clear();
     try {
       await FirebaseFirestore.instance
           .collection('potatoShade')
