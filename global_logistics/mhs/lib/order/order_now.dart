@@ -10,6 +10,7 @@ import 'package:mhs/models/order_model.dart';
 import 'package:mhs/models/package_model.dart';
 import 'package:mhs/order/confirm_order_details.dart';
 import 'package:mhs/order/package_info.dart';
+import 'package:mhs/order/warehouse_list.dart';
 import 'package:mhs/provider/storage_provider.dart';
 import 'package:mhs/widgets/business_area_list.dart';
 import 'package:mhs/widgets/check_box_container.dart';
@@ -33,6 +34,7 @@ class _OrderNowState extends State<OrderNow> {
   List<String> outdoorHandlingOption = ["Warehouse", "parking"];
   List<bool> outdoorHandlingOptionBool = [false, false];
   String packagetype = "Other Handling Package";
+  DropDownMenuDataModel selectedWarehouse = DropDownMenuDataModel("", "", "");
   List<bool> tractorOptionBool = [false, false];
   List<String> tractorOption = [
     "Collect Full TY/Trailer",
@@ -259,6 +261,23 @@ class _OrderNowState extends State<OrderNow> {
     }));
   }
 
+  // void getParsedData(DropDownMenuDataModel i) {
+  //   selectedWarehouse = i;
+  //   setState(() {});
+  // }
+
+  void navWarehouse() async {
+    DropDownMenuDataModel? sWarehouse =
+        await Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+      return WarehouseList(list: indoorList);
+    }));
+    if (sWarehouse != null) {
+      setState(() {
+        selectedWarehouse = sWarehouse;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final BusinessProfileModel business =
@@ -290,7 +309,7 @@ class _OrderNowState extends State<OrderNow> {
             Expanded(
               child: Card(
                 child: CheckBoxContainer(
-                    iconImage: orderCategoryImage[0],
+                    iconImage: 'assets/images/material-handling.png',
                     check: packageTypeBool,
                     tapped: () => changeStatus("packagetype", 0),
                     title: packagetype),
@@ -563,18 +582,27 @@ class _OrderNowState extends State<OrderNow> {
                       a,
                       "outdoorBuilding"),
                 ),
-                Card(
-                  color: AppTheme.primaryColor.withOpacity(0.1),
-                  child: DropDownMenu(
-                      getValues,
-                      "Select Warehouse",
-                      //  const Icon(Icons.build),
-                      indoorList,
-                      indoorList.isNotEmpty
-                          ? indoorList.first
-                          : DropDownMenuDataModel("", "", ""),
-                      "outdoorLocation"),
+                GestureDetector(
+                  onTap: navWarehouse,
+                  child: ListTile(
+                    title: selectedWarehouse.title.isEmpty
+                        ? const Text("Select Warehouse")
+                        : Text(selectedWarehouse.value),
+                    trailing: const Icon(Icons.chevron_right),
+                  ),
                 ),
+                // Card(
+                //   color: AppTheme.primaryColor.withOpacity(0.1),
+                //   child: DropDownMenu(
+                //       getValues,
+                //       "Select Warehouse",
+                //       //  const Icon(Icons.build),
+                //       indoorList,
+                //       indoorList.isNotEmpty
+                //           ? indoorList.first
+                //           : DropDownMenuDataModel("", "", ""),
+                //       "outdoorLocation"),
+                // ),
               ],
             ),
           ),
